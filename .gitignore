@@ -1,0 +1,7 @@
+.sass-cache
+_site
+.jekyll-metadata
+.DS_store
+update_bundle.sh
+check_links.sh
+new-way-to-launch-local.txt

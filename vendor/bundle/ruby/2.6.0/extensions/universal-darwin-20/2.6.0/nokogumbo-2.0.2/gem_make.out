@@ -1,0 +1,51 @@
+current directory: /Users/laura.jackson/Desktop/GitHub/workflow_test/vendor/bundle/ruby/2.6.0/gems/nokogumbo-2.0.2/ext/nokogumbo
+/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/bin/ruby -I /System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0 -r ./siteconf20211019-4381-1r2fxrn.rb extconf.rb
+checking for libxml/tree.h in /Users/laura.jackson/Desktop/GitHub/workflow_test/vendor/bundle/ruby/2.6.0/gems/nokogiri-1.10.10/ports/x86_64-apple-darwin20/libxml2/2.9.10/include/libxml2... yes
+checking for nokogiri.h in /Users/laura.jackson/Desktop/GitHub/workflow_test/vendor/bundle/ruby/2.6.0/gems/nokogiri-1.10.10/ext/nokogiri... yes
+creating Makefile
+
+current directory: /Users/laura.jackson/Desktop/GitHub/workflow_test/vendor/bundle/ruby/2.6.0/gems/nokogumbo-2.0.2/ext/nokogumbo
+make "DESTDIR=" clean
+
+current directory: /Users/laura.jackson/Desktop/GitHub/workflow_test/vendor/bundle/ruby/2.6.0/gems/nokogumbo-2.0.2/ext/nokogumbo
+make "DESTDIR="
+compiling nokogumbo.c
+In file included from nokogumbo.c:53:
+/Users/laura.jackson/Desktop/GitHub/workflow_test/vendor/bundle/ruby/2.6.0/gems/nokogiri-1.10.10/ext/nokogiri/nokogiri.h:13:9: warning: '_GNU_SOURCE' macro redefined [-Wmacro-redefined]
+#define _GNU_SOURCE
+        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/universal-darwin20/ruby/config.h:16:9: note: previous definition is here
+#define _GNU_SOURCE 1
+        ^
+1 warning generated.
+compiling ./../../gumbo-parser/src/string_buffer.c
+compiling ./../../gumbo-parser/src/svg_attrs.c
+compiling ./../../gumbo-parser/src/ascii.c
+compiling ./../../gumbo-parser/src/util.c
+compiling ./../../gumbo-parser/src/svg_tags.c
+compiling ./../../gumbo-parser/src/vector.c
+compiling ./../../gumbo-parser/src/attribute.c
+compiling ./../../gumbo-parser/src/token_buffer.c
+compiling ./../../gumbo-parser/src/char_ref.c
+compiling ./../../gumbo-parser/src/utf8.c
+compiling ./../../gumbo-parser/src/error.c
+./../../gumbo-parser/src/error.c:99:20: warning: cast to smaller integer type 'GumboTag' from 'void *' [-Wvoid-pointer-to-enum-cast]
+    GumboTag tag = (GumboTag) error->tag_stack.data[i];
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
+compiling ./../../gumbo-parser/src/tag.c
+compiling ./../../gumbo-parser/src/parser.c
+./../../gumbo-parser/src/parser.c:539:10: warning: cast to smaller integer type 'GumboInsertionMode' from 'void *' [-Wvoid-pointer-to-enum-cast]
+  return (GumboInsertionMode) modes->data[(modes->length - 1)];
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
+compiling ./../../gumbo-parser/src/foreign_attrs.c
+compiling ./../../gumbo-parser/src/tokenizer.c
+compiling ./../../gumbo-parser/src/string_piece.c
+compiling ./../../gumbo-parser/src/tag_lookup.c
+linking shared-object nokogumbo/nokogumbo.bundle
+ld: warning: directory not found for option '-L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.4.Internal.sdk/usr/local/lib'
+
+current directory: /Users/laura.jackson/Desktop/GitHub/workflow_test/vendor/bundle/ruby/2.6.0/gems/nokogumbo-2.0.2/ext/nokogumbo
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 nokogumbo.bundle ./.gem.20211019-4381-106yw0l/nokogumbo

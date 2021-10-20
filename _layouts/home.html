@@ -1,0 +1,50 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+  {% include head.html %}
+
+  <body class="page">
+
+    {% include _header.html %}
+    {% include _browser-upgrade.html %}
+
+    <section id="home">
+      <div class="intro-header_landing">
+  
+        <div class="container_landing">
+    
+          <div class="row_landing">
+            <div class="col-lg-12_landing">
+              <div class="intro-message_landing">
+                <h1>Welcome!<br></h1>
+                <h3><br></h3>
+                <h3>This workshop will focus on metabarcoding pipeline analysis.<br>
+                <br>
+                <br>
+                For more info about the workshop goals and schedule, <br>
+                check out the pre-workshop information section for details.</h3>
+                <h6><br></h6>
+                
+                <ul class="list-inline intro-link-buttons">                  
+                    <li><a href="/Preworkshop/" class="btn_home btn-default_home btn-lg_home"> <span class="network-name_landing" style="">Pre-Workshop Information</span></a></li>
+                    <li><a href="/Tutorial/" class="btn_home btn-default_home btn-lg_home"> <span class="network-name_landing">Tutorial</span></a></li>
+                    <li><a href="/Installation/" class="btn_home btn-default_home btn-lg_home"> <span class="network-name_landing">Installation Instructions</span></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+      
+        </div>
+      </div>
+    </section>
+
+    {% include footer.html %}
+
+  </body>
+
+</html>
