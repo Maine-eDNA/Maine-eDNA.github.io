@@ -11,8 +11,8 @@
 title: Maine-eDNA
 email: laura.jackson@maine.edu
 author: Maine-eDNA
-url: "https://laurajackson.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-repository: "laurajackson/bioinformatics_workshop_2021"
+url: "https://maine-edna.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
+repository: "maine-edna/bioinformatics_workshop_2021"
 github_username:  Maine-eDNA
 
 # Build settings
