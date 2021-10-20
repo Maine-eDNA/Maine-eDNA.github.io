@@ -15,12 +15,17 @@ The purpose of this site is to provide an overview, helpful information, and set
 
 <hr style="height:15px; visibility:hidden;" />
 # Schedule
+---
+<br>
 
 10:00am - 12:00pm
  - Data Quality Filtering/Dada2
  
- > 1hr Lunch Break and Troubleshooting
+ <br>
  
+_**1hr Lunch Break and Troubleshooting**_
+
+<br>
  1:00pm - 3:00pm
  - Taxonomic Assignment and Plotting
  
