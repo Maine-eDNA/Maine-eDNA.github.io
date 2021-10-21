@@ -12,9 +12,9 @@ permalink: /Tutorial/index
 
 During this tutorial, we are going to run through one way to process an amplicon dataset and cover some of the many analyses for a metabarcoding pipeline. There are four main resources we will be using throughout this workflow:
 
-**FastQC:** [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/){target="_blank"} checks the quality of the sequencing dataset.
+**FastQC:** [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/){:target="_blank"} checks the quality of the sequencing dataset.
 
-**Cutadapt:** [Cutadapt](https://cutadapt.readthedocs.io/en/stable/){target="_blank"} removes the non-biological nucleotides, such as primers, from sequence data.
+**Cutadapt:** [Cutadapt](https://cutadapt.readthedocs.io/en/stable/){:target="_blank"} removes the non-biological nucleotides, such as primers, from sequence data.
 
 **DADA2:** [DADA2](https://benjjneb.github.io/dada2/index.html){:target="_blank"} is an R package for recovering single-nucleotide resolved Amplicon Sequence Variants (ASVs) from amplicon data. The DADA2 team has a great tutorial available [here](https://benjjneb.github.io/dada2/tutorial.html){:target="_blank"}.
 
@@ -105,7 +105,8 @@ The first step we are going to do is check the quality of our data using fastqc.
 
 ***INSERT FASTQC SCREENSHOT HERE***
 
-Above is a screenshot of the fastqc result for the forward and reverse files of two of the samples from our Highland Lake dataset. ***FILL IN WITH COMMENTS ON FASTQC RESULT FOR HIGHLAND LAKE***
+Above is a screenshot of the fastqc result for the forward and reverse files of two of the samples from our Highland Lake dataset. 
+***FILL IN WITH COMMENTS ON FASTQC RESULT FOR HIGHLAND LAKE***
 
 <br>
 ## Remove Primers
@@ -122,7 +123,8 @@ Our next step is to remove the primers from our sequences using cutadapt. Cutada
 - input file: file name for forward reads. `forwardinput.fq.gz`
 - output file: file name for reverse reads. `reverseinput.fq.gz`
 
-Cutadapt only works on one file at a time. Therefore, when we would like to run this operation on our entire dataset, we wrap it in a loop to do so easily. ***HOW DO WE WANT TO TALK ABOUT MAKING A FILE WITH FILENAMES, R OR COMMANDLINE?***
+Cutadapt only works on one file at a time. Therefore, when we would like to run this operation on our entire dataset, we wrap it in a loop to do so easily. 
+***HOW DO WE WANT TO TALK ABOUT MAKING A FILE WITH FILENAMES, R OR COMMANDLINE?***
 
 ***CHECK THIS CODE TO MAKE SURE IT MATCHES HOW WE WOULD RUN IT FOR HIGHLAND LAKE SET***
 ```bash
