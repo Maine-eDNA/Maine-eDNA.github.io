@@ -299,11 +299,17 @@ Below is the output of the first four reverse reads:
 
 Next, we want to create an error model for our dataset, as DADA2 relies on a parametric error model. Each dataset has it's own error profile, and the `learnErrors()` function learns the error rate for both the forward and reverse reads of your dataset.
 
-***DO WE WANT TO MULTITHREAD? DEPENDS ON SYSTEM***
-
 ```R
 err_forward_reads <- learnErrors(filtered_forward_reads)
 err_reverse_reads <- learnErrors(filtered_reverse_reads)
+
+#set multithread = TRUE if running on your own system:
+#err_forward_reads <- learnErrors(filtered_forward_reads, multithread = TRUE)
+#err_reverse_reads <- learnErrors(filtered_reverse_reads, multithread = TRUE)
+
+ ##Global Environment:
+ # err_forward_reads        List of 3
+ # err_reverse_reads        List of 3
 ```
 
 We can visualize our model with the `plotErrors()` function.
@@ -312,14 +318,13 @@ We can visualize our model with the `plotErrors()` function.
 plotErrors(err_forward_reads, nominalQ=TRUE)
 plotErrors(err_reverse_reads, nominalQ=TRUE)
 ```
-***INSERT IMAGE OF PLOTS***
+
+<center><img src="../images/ErrorPlotForward.png"></center>
+
 ***FOLLOWING PARAGRAPH IS STOLEN AND SHOULD BE REWRITTEN***
 The error rates for each possible transition are shown. Points are the observed error rates for each consensus quality score. The black line shows the estimated error rates after convergence of the machine-learning algorithm. The red line shows the error rates expected under the nominal definition of the Q-score. Here the estimated error rates (black line) are a good fit to the observed rates (points), and the error rates drop with increased quality as expected. Everything looks reasonable and we proceed with confidence.
 
-
 <br>
-<br>
-
 
 ## Dereplication
 
