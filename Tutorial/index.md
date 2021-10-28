@@ -71,7 +71,7 @@ Highland lakes info here.....
 At this point, we are assuming that the Highland Lake data lives in a directory named `MetabarcodingWorkshop`, and that the forward reads are in files labeled with `R1`, and each has a cooresponding reverse read file that is labeled with `R2`.
 
 Now, let's get started!
-<br>
+
 <br>
 
 ---
@@ -109,19 +109,20 @@ Above is a screenshot of the fastqc result for the forward and reverse files of 
 ***FILL IN WITH COMMENTS ON FASTQC RESULT FOR HIGHLAND LAKE***
 
 <br>
+
 ## Remove Primers
 
 Our next step is to remove the primers from our sequences using cutadapt. Cutadapt will be handed multiple arguments followed by the files you are running this operation on. The arguments we will use are as follows (you can learn more options via cutadapt's documentation):
 
-- `-a`: The primers that you expect to see in your forward read. Since we are working with sequences where you may find part of your reverse primer in your reads, we will hand cutadapt the forward primer (5' - 3') as well as the reverse complement of your reverse primer, linked with three dots between the two. With this linked option, cutadapt will expect to see your "anchored" primer (in this case, your forward primer), but if it sees any or all of your reverse primer, it will remove that as well. `-a ^FORWARD...REVERSECOMP_REVERSE`
-- `-A`: Similar to above, the primers that you expect to see in your reverse read. In this case, we will hand cutadapt the reverse primer (5' - 3') as well as the reverse complement of your forward primer, linked with three dots between the two. With this linked option, cutadapt will expect to see your "anchored" primer (in this case, your reverse primer), but if it sees any or all of your forward primer, it will remove that as well. `-A ^REVERSE...REVERSECOMP_FORWARD`
-- `-m`: Minimum read length, often good to set this below what you expect the minimum length of your reads to be. `-m MIN_NUMBER`
-- `-M`: Maximum read length, often good to set this above what you expect the maximum length of your reads to be. `-m MAX_NUMBER`
-- `--discard-untrimmed`: This will throw away any read pairs that do not have either the forward primer in the forward read or the reverse primer in the reverse read. 
-- `-o`: output file for the forward reads. `-o R1.outputfile.fq.gz`
-- `-p`: output file for the reverse reads. `-p R2.outputfile.fq.gz`
-- input file: file name for forward reads. `forwardinput.fq.gz`
-- output file: file name for reverse reads. `reverseinput.fq.gz`
+- **-a:** The primers that you expect to see in your forward read. Since we are working with sequences where you may find part of your reverse primer in your reads, we will hand cutadapt the forward primer (5' - 3') as well as the reverse complement of your reverse primer, linked with three dots between the two. With this linked option, cutadapt will expect to see your "anchored" primer (in this case, your forward primer), but if it sees any or all of your reverse primer, it will remove that as well. `-a ^FORWARD...REVERSECOMP_REVERSE`
+- **-A:** Similar to above, the primers that you expect to see in your reverse read. In this case, we will hand cutadapt the reverse primer (5' - 3') as well as the reverse complement of your forward primer, linked with three dots between the two. With this linked option, cutadapt will expect to see your "anchored" primer (in this case, your reverse primer), but if it sees any or all of your forward primer, it will remove that as well. `-A ^REVERSE...REVERSECOMP_FORWARD`
+- **-m:** Minimum read length, often good to set this below what you expect the minimum length of your reads to be. `-m MIN_NUMBER`
+- **-M:** Maximum read length, often good to set this above what you expect the maximum length of your reads to be. `-m MAX_NUMBER`
+- **--discard-untrimmed:** This will throw away any read pairs that do not have either the forward primer in the forward read or the reverse primer in the reverse read. 
+- **-o:** output file for the forward reads. `-o R1.outputfile.fq.gz`
+- **-p:** output file for the reverse reads. `-p R2.outputfile.fq.gz`
+- **input file:** file name for forward reads. `forwardinput.fq.gz`
+- **output file:** file name for reverse reads. `reverseinput.fq.gz`
 
 Cutadapt only works on one file at a time. Therefore, when we would like to run this operation on our entire dataset, we wrap it in a loop to do so easily. 
 ***HOW DO WE WANT TO TALK ABOUT MAKING A FILE WITH FILENAMES, R OR COMMANDLINE?***
@@ -151,8 +152,6 @@ In the above loop, after passing cutadapt the listed arguments as well as the fo
 
 ***DO WE RUN FASTQC AGAIN AS WELL CAUSE THERE IS A QUALITY PLOT THERE OR JUST DO QUALITY PLOT SEPERATELY?***
 
-
-<br>
 <br>
 
 
@@ -222,10 +221,8 @@ Below is the output of the first four reverse reads:
 
 When reading these plots, you will find the bases are along the x-axis and the quality score is on the y-axis. The black underlying heatmap shows the frequency of each score at each base position, the green line is the median quality score at that base position, and the orange lines show the quartiles.
 
-A quality score of 30 is equal to an expected error rate of 1 in 1,000, and this will be the cutoff we use in our analysis. Looking at the above graphs, ***THIS INFORMATION SHOULD BE UPDATED BASED ON THE GRAPHS*** you will see that overall the quality looks good. The forward reads maintain a high quality until around ***BASEPAIR XX***, while the reverse reads maintain a high quality until around ***BASEPAIR XX***. The fact that the reverse read drops in quality before the forward read does should not be of concern, as this is a common occurrence with chemistry.
+A quality score of 30 is equal to an expected error rate of 1 in 1,000, and this will be the cutoff we use in our analysis. Looking at the above graphs, you will see that overall the quality looks good. The forward reads maintain a high quality until around 250bp, while the reverse reads maintain a high quality until around 200bp. The fact that the reverse read drops in quality before the forward read does should not be of concern, as this is a common occurrence with chemistry.
 
-
-<br>
 <br>
 
 ## Filter and Trimming
@@ -235,23 +232,25 @@ With the knowledge that viewing our quality plots has provided, we will now trim
 First, we will create a new set of variables for our filtered reads to be assigned to.
 
 ```R
-filtered_forward_reads <- paste0(samples, "_sub_R1_filtered.fq.gz")
-filtered_reverse_reads <- paste0(samples, "_sub_R2_filtered.fq.gz")
+filtered_forward_reads <- paste0(samples, "_R1_filtered.fq.gz")
+filtered_reverse_reads <- paste0(samples, "_R2_filtered.fq.gz")
+
+ ##Global Environment:
+ # filtered_forward_reads    chr [1:49] "KAW1_R1_filtered.fq.gz" ...
+ # filtered_reverse_reads    chr [1:49] "KAW1_R2_filtered.fq.gz" ...
 ```
 
-Next, we will run the `filterAndTrim()` function to trim our reads based on our quality filter of 30 and above, passing the function our input files, output file name, and a few parameters. The parameters we will use are as follows
-***WHAT PARAMETERS ARE YOU USING?***
+Next, we will run the `filterAndTrim()` function to trim our reads based on our quality filter of 30 and above, passing the function our input files, output file name, and a few parameters. The parameters we will use are as follows:
 
-- forward reads input: input files for forward reads
-- forward reads output: output files for forward reads
-- reverse reads input: input files for reverse reads
-- reverse reads output: output files for reverse reads
-- `maxEE`: the maximum amount of erroneous errors in each read. This is passed to R as a vector of two values, one for forward and one for reverse `c(ForwardValue, ReverseValue)`.
-- `minLen`: the minimum length the reads can be after trimming. You want to ensure that there will be enough overlap between the forward and reverse reads after trimming them. 
-- `truncLen`: the length to trim the forward and reverse reads to, based on your analysis of the quality plots from before. This is passed to R as a vector of two values, as the forward reads will often be of higher quality for a longer length than the reverse reads will be `c(ForwardValue, ReverseValue)`.
+- **forward reads input:** input files for forward reads
+- **forward reads output:** output files for forward reads
+- **reverse reads input:** input files for reverse reads
+- **reverse reads output:** output files for reverse reads
+- **maxEE:** the maximum amount of erroneous errors in each read. This is passed to R as a vector of two values, one for forward and one for reverse `c(ForwardValue, ReverseValue)`.
+- **minLen:** the minimum length the reads can be after trimming. You want to ensure that there will be enough overlap between the forward and reverse reads after trimming them. 
+- **truncLen:** the length to trim the forward and reverse reads to, based on your analysis of the quality plots from before. This is passed to R as a vector of two values, as the forward reads will often be of higher quality for a longer length than the reverse reads will be `c(ForwardValue, ReverseValue)`.
 
 For our Highland Lake data, we run this function as follows:
-***CHECK NUMBERS CAUSE I MADE THEM UP AND DONT KNOW THIS DATASET***
 
 ```R
 filtered_out <- filterAndTrim(forward_reads, 
@@ -261,20 +260,40 @@ filtered_out <- filterAndTrim(forward_reads,
                               maxEE=c(2,2),
                               minLen=175, 
                               truncLen=c(250,200))
+                        
+ ##Global Environment:
+ # filtered_out     num [1:49, 1:2] 26214 16767 32055 29206 25789 ...
 ```
 
 The `filtered_out` matrix we created has each sample name, the number of reads it originally had, and the number of reads it has now that the samples have been filtered. We can look at that to see the difference in counts before and after.
 
-***INSERT IMAGE OF INPUT/OUTPUT MATRIX***
+```R
+filtered_out
+                        
+#                                  reads.in reads.out
+# KAW1_S202_L001_R1_001.fastq.gz     26214     23016
+# KAW10_S215_L001_R1_001.fastq.gz    16767     14624
+# KAW11_S227_L001_R1_001.fastq.gz    32055     27841
+# KAW12_S239_L001_R1_001.fastq.gz    29206     25121
+# KAW13_S251_L001_R1_001.fastq.gz    25789     22684
+```
 
 Another thing we can look at is a quality plot! Similar to before, we can run `plotQualityProfile` on our trimmed and filtered data to verify that the quality of our reads are what we expect them to be.
 
 ```R
-plotQualityProfile(forward_reads)
-plotQualityProfile(reverse_reads)
+plotQualityProfile(filtered_forward_reads[1:4])
+plotQualityProfile(filtered_reverse_reads[1:4])
 ```
 
-***INSERT IMAGE OF 1-2 FORWARD AND REVERSE PLOTS***
+Below is the output of the first four forward reads:
+
+<center><img src="../images/QualityPlotForwardFiltered.png"></center>
+
+Below is the output of the first four reverse reads:
+
+<center><img src="../images/QualityPlotReverseFiltered.png"></center>
+
+<br>
 
 ## Generate Error Model
 
