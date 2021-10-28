@@ -319,6 +319,8 @@ plotErrors(err_forward_reads, nominalQ=TRUE)
 plotErrors(err_reverse_reads, nominalQ=TRUE)
 ```
 
+Below is the graph of our forward error plot (reverse looks very similar):
+
 <center><img src="../images/ErrorPlotForward.png"></center>
 
 ***FOLLOWING PARAGRAPH IS STOLEN AND SHOULD BE REWRITTEN***
@@ -335,9 +337,12 @@ derep_forward <- derepFastq(filtered_forward_reads, verbose=TRUE)
 names(derep_forward) <- samples 
 derep_reverse <- derepFastq(filtered_reverse_reads, verbose=TRUE)
 names(derep_reverse) <- samples
+
+ ##Global Environment:
+ # derep_forward            Large list (49 elements, 972.1 MB)
+ # derep_reverse            Large list (49 elements, 642.8 MB)
 ```
 
-<br>
 <br>
 
 ## Inferring ASVs
