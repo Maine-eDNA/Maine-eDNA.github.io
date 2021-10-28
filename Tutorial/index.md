@@ -162,9 +162,9 @@ From here on out, we will be working in R. Thus, the first step is to ensure we 
 
 ``` R
 library(dada2)
-packageVersion("dada2") #1.18.0 when this was written in October 2021
+packageVersion("dada2") 
+#1.18.0 for Rene when this was written in October 2021
 
-setwd("~/MetabarcodingWorkshop")
 ```
 
 Next, we will set up some variable names in our environment to make processing our samples easier.
@@ -172,12 +172,29 @@ Next, we will set up some variable names in our environment to make processing o
 ***THIS IS SOMEWHAT DEPENDENT ON THE FILENAMES, AND IM NOT SURE WHAT THEY ARE***
 
 ``` R
+#set this to the path where your fastq files live
+path <- "MetabarcodingWorkshop/reads" 
 
-samples <-
+list.files(path)
+ ## Output:
+ #[1] "KAW1_S202_L001_R1_001.fastq.gz" 
+ #[2] "KAW1_S202_L001_R2_001.fastq.gz" 
+ #[3] "KAW10_S215_L001_R1_001.fastq.gz"
+ #[4] "KAW10_S215_L001_R2_001.fastq.gz"
+ #[5] "KAW11_S227_L001_R1_001.fastq.gz"
+ #[6] "KAW11_S227_L001_R2_001.fastq.gz"
+ #... should have 98 files
 
-forward_reads <-
+forward_reads <- sort(list.files(path, pattern="_R1_001.fastq.gz", full.names = TRUE))
 
-reverse_reads <-
+reverse_reads <- sort(list.files(path, pattern="_R2_001.fastq.gz", full.names = TRUE))
+
+samples <- sapply(strsplit(basename(forward_reads), "_"), `[`, 1)
+
+ ##Global Environment:
+ # forward_reads    chr [1:49] "reads/KAW1_S202_L001_R1_001.fastq.gz"...
+ # reverse_reads    chr [1:49] "reads/KAW1_S202_L001_R2_001.fastq.gz"...
+ # samples          chr [1:49] "KAW1" "KAW10" "KAW11" "KAW12"...
 
 ```
 
@@ -192,10 +209,19 @@ Now that we have these variables set up, we can proceed with our data processing
 Let's first take a look at what the quality of our data looks like now. Instead of running fastqc as we did at the beginning, we can use the dada2 function `plotQualityProfile`.
 
 ```R
-plotQualityProfile(forward_reads)
-plotQualityProfile(reverse_reads)
+#to run a subset of the reads, select which with square brackets
+#below we are only running the first four in the list previously created
+plotQualityProfile(forward_reads[1:4])
+plotQualityProfile(reverse_reads[1:4])
 ```
-***INSERT IMAGE OF 1-2 FORWARD AND REVERSE PLOTS***
+
+Below is the output of the first four forward reads:
+
+<center><img src="../images/QualityPlotForwardInitial.png"></center>
+
+Below is the output of the first four reverse reads:
+
+<center><img src="../images/QualityPlotReverseInitial.png"></center>
 
 When reading these plots, you will find the bases are along the x-axis and the quality score is on the y-axis. The black underlying heatmap shows the frequency of each score at each base position, the green line is the median quality score at that base position, and the orange lines show the quartiles.
 
