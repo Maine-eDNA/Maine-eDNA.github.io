@@ -169,7 +169,6 @@ packageVersion("dada2")
 
 Next, we will set up some variable names in our environment to make processing our samples easier.
 
-***THIS IS SOMEWHAT DEPENDENT ON THE FILENAMES, AND IM NOT SURE WHAT THEY ARE***
 
 ``` R
 #set this to the path where your fastq files live
@@ -198,10 +197,8 @@ samples <- sapply(strsplit(basename(forward_reads), "_"), `[`, 1)
 
 ```
 
-Now that we have these variables set up, we can proceed with our data processing.
+Now that we have these variables set up, we can proceed with our data processing!!
 
-
-<br>
 <br>
 
 ## Quality Plot Inspection
@@ -209,8 +206,8 @@ Now that we have these variables set up, we can proceed with our data processing
 Let's first take a look at what the quality of our data looks like now. Instead of running fastqc as we did at the beginning, we can use the dada2 function `plotQualityProfile`.
 
 ```R
-#to run a subset of the reads, select which with square brackets
-#below we are only running the first four in the list previously created
+# to run a subset of the reads, select which with square brackets
+# below we are only running the first four in the list we previously created
 plotQualityProfile(forward_reads[1:4])
 plotQualityProfile(reverse_reads[1:4])
 ```
