@@ -349,31 +349,38 @@ names(derep_reverse) <- samples
 
 Now it is time to infer true biological sequences - the main inference algorithm of DADA2. DADA2 uses quality profiles and abundances of each unique sequence to figure out if each sequence is more likely to be of biological origin or spurious. You can read more on the DADA2 site.
 
-***MULTITHRED OR NOT BASED ON COMPUTING SYSTEM, ALSO DO WE WANT TO POOL?***
 ```R
 dada_forward <- dada(derep_forward, err=err_forward_reads, pool="pseudo")
 dada_reverse <- dada(derep_reverse, err=err_reverse_reads, pool="pseudo")
+
+#set multithread = TRUE if running on your own system:
+#dada_forward <- dada(derep_forward, err=err_forward_reads, pool="pseudo", multithread = TRUE)
+#dada_reverse <- dada(derep_reverse, err=err_reverse_reads, pool="pseudo", multithread = TRUE)
+
+ ##Global Environment:
+ # dada_forward            List of 49
+ # dada_reverse            List of 49
 ```
 
 <br>
-<br>
-
 
 ## Merging paired reads
 
 We will now merge the forward and reverse reads to obtain our entire amplicons. DADA2 aligns the corresponding forward and reverse reads such that a required number of bases overlap perfectly. As a default, DADA2 requires 12 basepairs to overlap, however, to be more stringent, we can set the variable `minOverlap` to be a value of basepairs we expect our sequences to have based on our truncated lengths. The output of this process is are merged "contigs". If there are any reads that do not overlap perfectly at this step they are removed from the dataset.
 
-***ONCE AGAIN DONT KNOW WHAT LENGTHS WE ARE WORKING WITH***
+
 ```R
 merged_amplicons <- mergePairs(dada_forward, 
                               derep_forward, 
                               dada_reverse,
                               derep_reverse, 
-                              minOverlap=80)
+                              minOverlap=20)
+
+ ##Global Environment:
+ # merged_amplicons            Large list (49 elements, 19.1 MB)
+                              
 ```
 
-
-<br>
 <br>
 
 ## Count Table and Summary
@@ -383,6 +390,10 @@ To summarize the workflow nicely, we will use the `makeSequenceTable()` function
 ```R
 seqtab <- makeSequenceTable(merged_amplicons)
 dim(seqtab)
+# 49 7082
+
+##Global Environment:
+ # seqtab            Lagre matrix (347018 elements, 4.6 MB)
 ```
 
 While useful, the ASV table is not the easiest to read. Thus, we will mold the data a bit to make it more user-friendly.
@@ -391,9 +402,12 @@ First, we will identify chimeras. DADA2 identifies likely chimeras by aligning e
 
 ```R
 seqtab.nochim <- removeBimeraDenovo(seqtab, multithread=TRUE, verbose=TRUE)
-dim(seqtab.nochim)
+# Identified 4787 bimeras out of 7082 input sequences.
 
+dim(seqtab.nochim)
+# 49 2295
 sum(seqtab.nochim)/sum(seqtab)
+# 0.9471908
 ```
 
 Next, we will create a table with the count of sequences at each step of our pipeline and write it out to a file `read-count-tracking.tsv`.
@@ -409,6 +423,20 @@ summary_tab <- data.frame(row.names=samples, dada2_input=filtered_out[,1],
                final_perc_reads_retained=round(rowSums(seqtab.nochim)/filtered_out[,1]*100, 1))
 
 write.table(summary_tab, "read-count-tracking.tsv", quote=FALSE, sep="\t", col.names=NA)
+
+##Global Environment:
+ # summary_tab            49 obs of 7 variables
+ 
+head(summary_tab)
+
+#       dada2_input filtered dada_f dada_r merged nonchim final_perc_reads_retained
+# KAW1        26214    23016  22749  22835  21544   19904                      75.9
+# KAW10       16767    14624  14514  14528  13567   12605                      75.2
+# KAW11       32055    27841  27683  27737  26860   25673                      80.1
+# KAW12       29206    25121  24971  25015  22817   21942                      75.1
+# KAW13       25789    22684  22496  22490  21523   19665                      76.3
+# KAW14       30269    26219  25963  25958  24671   22486                      74.3
+
 ```
 
 Now we have our ASVs ready to be assigned taxonomy so we can identify what is really existing in our samples!
