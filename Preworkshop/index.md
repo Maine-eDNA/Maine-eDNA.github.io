@@ -23,11 +23,10 @@ The purpose of this site is to provide an overview, helpful information, and set
  - Filtering
  - Denoising using Dada2
  
- <br>
- 
+  
 _**1hr Lunch Break and Troubleshooting**_
 
-<br>
+
  1:00pm - 3:00pm
  - Taxonomic Assignment
  - Visualization
@@ -41,8 +40,7 @@ _**1hr Lunch Break and Troubleshooting**_
 ---
 <hr style="height:15px; visibility:hidden;" />
 
-### 1) CyVerse Account and VICE Access
-<img src:"https://cyverse.org/sites/default/files/inline-images/cyverse_cmyk.png" width="200">
+### 1) CyVerse Account and VICE Access   *REQUIRED
 
  - For this workshop, we are going to be running the analysis workflow through the CyVerse Visual and Interactive Computing Environment (VICE). CyVerse is an open science workspace funded by NSF that allows you to run analysis and manage all your data and research in one place. The VICE environment is the latest feature in CyVerse's Discovery Environment (DE) for running interactive applications. This workshop will be using a custom built application that runs a containerized environment of software and dependencies using the RStudio interface. 
 
@@ -52,8 +50,9 @@ _**1hr Lunch Break and Troubleshooting**_
 
  <center><img src="../images/CyVerse.png" width="500"></center>
 
+<br>
 
-### 2) Slack
+### 2) Slack   *REQUIRED
 
  - We will be using Slack for all correspondence before, during, and after the workshop. This platform will allow participants to collaborate and ask questions with other workshop participants and organizers, get help with techinical questions, and post relevant content and material. Slack will be our only mode of communication during the workshop, as we will not be using the chat feature on Zoom, so this software will be **_required_** for the workshop. 
  
@@ -80,6 +79,6 @@ _**1hr Lunch Break and Troubleshooting**_
   - RStudio is an integrated development environment (IDE) for R. It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging and workspace management. There are two versions available for download: RStudio Desktop and RStudio Server, which can be accessed here <https://www.rstudio.com/>. RStudio Desktop is a regular desktop application while RStudio Server runs on a remote server and allows accessing RStudio using a web browser. For beginner users, we recommend the RStudio Desktop version.
 
 <br />
- <center><img src="../images/Rlogo.png"></center>
+ <center><img src="../images/Rlogo.png" width="500"></center>
 
 <br>
