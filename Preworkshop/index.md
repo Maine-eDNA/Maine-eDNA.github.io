@@ -22,10 +22,8 @@ The purpose of this site is to provide an overview, helpful information, and set
  - Data Quality 
  - Filtering
  - Denoising using Dada2
- 
   
 _**1hr Lunch Break and Troubleshooting**_
-
 
  1:00pm - 3:00pm
  - Taxonomic Assignment
@@ -40,7 +38,10 @@ _**1hr Lunch Break and Troubleshooting**_
 ---
 <hr style="height:15px; visibility:hidden;" />
 
-### 1) CyVerse Account and VICE Access   *REQUIRED
+<br>
+
+### 1) CyVerse Account and VICE Access
+> Required for workshop
 
  - For this workshop, we are going to be running the analysis workflow through the CyVerse Visual and Interactive Computing Environment (VICE). CyVerse is an open science workspace funded by NSF that allows you to run analysis and manage all your data and research in one place. The VICE environment is the latest feature in CyVerse's Discovery Environment (DE) for running interactive applications. This workshop will be using a custom built application that runs a containerized environment of software and dependencies using the RStudio interface. 
 
@@ -52,7 +53,8 @@ _**1hr Lunch Break and Troubleshooting**_
 
 <br>
 
-### 2) Slack   *REQUIRED
+### 2) Slack 
+> Required for workshop
 
  - We will be using Slack for all correspondence before, during, and after the workshop. This platform will allow participants to collaborate and ask questions with other workshop participants and organizers, get help with techinical questions, and post relevant content and material. Slack will be our only mode of communication during the workshop, as we will not be using the chat feature on Zoom, so this software will be **_required_** for the workshop. 
  
@@ -73,6 +75,7 @@ _**1hr Lunch Break and Troubleshooting**_
 * R Version 4.1.2
 
   - R is a free software environment for statistical computing and graphics. It compiles and runs on a wide variety of UNIX platforms, Windows and MacOS. To download R, you can access the installers here <https://www.r-project.org/>.
+<br>
 
 * RStudio Version 1.4
 
