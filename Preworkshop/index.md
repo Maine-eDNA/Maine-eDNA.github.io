@@ -42,6 +42,7 @@ _**1hr Lunch Break and Troubleshooting**_
 <hr style="height:15px; visibility:hidden;" />
 
 ### 1) CyVerse Account and VICE Access
+<img src:"https://cyverse.org/sites/default/files/inline-images/cyverse_cmyk.png" width="200">
 
  - For this workshop, we are going to be running the analysis workflow through the CyVerse Visual and Interactive Computing Environment (VICE). CyVerse is an open science workspace funded by NSF that allows you to run analysis and manage all your data and research in one place. The VICE environment is the latest feature in CyVerse's Discovery Environment (DE) for running interactive applications. This workshop will be using a custom built application that runs a containerized environment of software and dependencies using the RStudio interface. 
 
