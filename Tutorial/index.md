@@ -21,40 +21,37 @@ During this tutorial, we are going to run through one way to process an amplicon
 **Phlyoseq:** [Phyloseq](https://joey711.github.io/phyloseq/){:target="_blank"} is an R package that analyzes and graphically displays sequencing data that has already been clustered into ASVs, especially when there is associated sample data, phylogenetic tree, and/or taxonomic assignment of the ASVs. 
 
 <br>
-
 ---
 ---
 <br>
 
 # Pipeline Initial Assumptions
 This workflow assumes that your sequencing data meets certain criteria:
-- 
-- 
-
+- You have paired-end sequences that are properly named (R1 and R2)
+- Your sequences have been demultiplexed
+- The primer sequences have not been removed from your sequences
+- Your sequences are all in the same directory
 
  
 <br>
-<br>
-<br>
-
 ---
-
-
-<br>
+---
 <br>
 
 # Working environment
-If wanting to follow along, we can work on our own system if we'd like, or we can work in a "Binder" without needing to worry about setting up the appropriate environment on our own system (see next section, [Binder available](#binder-available)).
+We will be operating in CyVerse, a virtual environment that already has the programs and packages installed that this pipeline requires. By now, you should have gotten a CyVerse account and joined our workshop. First things first, lets set up our Discovery Environment that we will be working in today:
 
-### Binder available
-[Binder](https://mybinder.org/){:target="_blank"} 
-
-
-<br>
-
-## Conda setup
-> **NOTE**  
-> Skip this section if working in the binder environment from above. 
+1. Log into CyVerse. You should now be at user.cyverse.org/services
+2. Under "My Services", click on "Discovery Environment"
+3. Click "Launch". You should now be at de.cyverse.org
+4. Click the 9-square logo "Apps" button on the left
+5. Click on the dropdown menu to go to "shared with me" and choose "metabarcoding-maine"
+6. Set up your environment:
+  - Analysis Info: You can leave this all on default settings
+  - Parameters: Click on "browse" for input folder, go to "Shared with me" and navigate to "robinsleith". choose to input 2K_HighlandLake folder
+  - Advanced Settings: 4 CPU Cores, 4 GiB, 4 GiB
+  - You're good to go! click "Launch Analysis".
+7. The environment you just created should be at the top of your analysis list. On the right hand side, click on the logo of the box and arrow to open up the environment window. This may take a few moments, so be patient.
 
 <br>
 
@@ -63,25 +60,18 @@ If wanting to follow along, we can work on our own system if we'd like, or we ca
 Highland lakes info here.....
 
 <br>
+---
+---
 <br>
 
-
-### Getting the data
-
-At this point, we are assuming that the Highland Lake data lives in a directory named `MetabarcodingWorkshop`, and that the forward reads are in files labeled with `R1`, and each has a cooresponding reverse read file that is labeled with `R2`.
-
-Now, let's get started!
+**Now, let's get started!**
 
 <br>
-
+---
 ---
 <br>
 
 # Processing overview
-
->**Note**  
-> There may be some slight differences in numbers in places due to differences in program versions between when this page was initially put together and what is in either the binder or conda environment. So don't worry if you are seeing something slightly different than what's noted or pictured anywhere below.
-
 
 
 ||Command|What it's doing|
@@ -108,6 +98,9 @@ The first step we are going to do is check the quality of our data using fastqc.
 Above is a screenshot of the fastqc result for the forward and reverse files of two of the samples from our Highland Lake dataset. 
 ***FILL IN WITH COMMENTS ON FASTQC RESULT FOR HIGHLAND LAKE***
 
+<br>
+---
+---
 <br>
 
 ## Remove Primers
@@ -152,6 +145,9 @@ In the above loop, after passing cutadapt the listed arguments as well as the fo
 
 ***DO WE RUN FASTQC AGAIN AS WELL CAUSE THERE IS A QUALITY PLOT THERE OR JUST DO QUALITY PLOT SEPERATELY?***
 
+<br>
+---
+---
 <br>
 
 
@@ -199,6 +195,9 @@ samples <- sapply(strsplit(basename(forward_reads), "_"), `[`, 1)
 Now that we have these variables set up, we can proceed with our data processing!!
 
 <br>
+---
+---
+<br>
 
 ## Quality Plot Inspection
 
@@ -213,16 +212,19 @@ plotQualityProfile(reverse_reads[1:4])
 
 Below is the output of the first four forward reads:
 
-<center><img src="../images/QualityPlotForwardInitial.png"></center>
+<center><img src="../images/QualityPlotForward2.png"></center>
 
 Below is the output of the first four reverse reads:
 
-<center><img src="../images/QualityPlotReverseInitial.png"></center>
+<center><img src="../images/QualityPlotReverse2.png"></center>
 
 When reading these plots, you will find the bases are along the x-axis and the quality score is on the y-axis. The black underlying heatmap shows the frequency of each score at each base position, the green line is the median quality score at that base position, and the orange lines show the quartiles.
 
 A quality score of 30 is equal to an expected error rate of 1 in 1,000, and this will be the cutoff we use in our analysis. Looking at the above graphs, you will see that overall the quality looks good. The forward reads maintain a high quality until around 250bp, while the reverse reads maintain a high quality until around 200bp. The fact that the reverse read drops in quality before the forward read does should not be of concern, as this is a common occurrence with chemistry.
 
+<br>
+---
+---
 <br>
 
 ## Filter and Trimming
@@ -287,12 +289,15 @@ plotQualityProfile(filtered_reverse_reads[1:4])
 
 Below is the output of the first four forward reads:
 
-<center><img src="../images/QualityPlotForwardFiltered.png"></center>
+<center><img src="../images/QualityPlotForwardFiltered2.png"></center>
 
 Below is the output of the first four reverse reads:
 
-<center><img src="../images/QualityPlotReverseFiltered.png"></center>
+<center><img src="../images/QualityPlotReverseFiltered2.png"></center>
 
+<br>
+---
+---
 <br>
 
 ## Generate Error Model
@@ -321,11 +326,14 @@ plotErrors(err_reverse_reads, nominalQ=TRUE)
 
 Below is the graph of our forward error plot (reverse looks very similar):
 
-<center><img src="../images/ErrorPlotForward.png"></center>
+<center><img src="../images/ErrorPlotForward2.png"></center>
 
 ***FOLLOWING PARAGRAPH IS STOLEN AND SHOULD BE REWRITTEN***
 The error rates for each possible transition are shown. Points are the observed error rates for each consensus quality score. The black line shows the estimated error rates after convergence of the machine-learning algorithm. The red line shows the error rates expected under the nominal definition of the Q-score. Here the estimated error rates (black line) are a good fit to the observed rates (points), and the error rates drop with increased quality as expected. Everything looks reasonable and we proceed with confidence.
 
+<br>
+---
+---
 <br>
 
 ## Dereplication
@@ -343,6 +351,9 @@ names(derep_reverse) <- samples
  # derep_reverse            Large list (49 elements, 642.8 MB)
 ```
 
+<br>
+---
+---
 <br>
 
 ## Inferring ASVs
@@ -363,6 +374,9 @@ dada_reverse <- dada(derep_reverse, err=err_reverse_reads, pool="pseudo")
 ```
 
 <br>
+---
+---
+<br>
 
 ## Merging paired reads
 
@@ -381,6 +395,9 @@ merged_amplicons <- mergePairs(dada_forward,
                               
 ```
 
+<br>
+---
+---
 <br>
 
 ## Count Table and Summary
@@ -442,18 +459,24 @@ head(summary_tab)
 Now we have our ASVs ready to be assigned taxonomy so we can identify what is really existing in our samples!
 
 <br>
+---
+---
 <br>
 
 ## Assigning taxonomy
 
 
 <br>
+---
+---
 <br>
 
 # Visualization with Phyloseq
 
 
 <br>
+---
+---
 <br>
 
 
