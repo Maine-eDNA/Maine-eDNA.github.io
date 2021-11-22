@@ -20,7 +20,7 @@ During this tutorial, we are going to run through one way to process an amplicon
 
 **Phlyoseq:** [Phyloseq](https://joey711.github.io/phyloseq/){:target="_blank"} is an R package that analyzes and graphically displays sequencing data that has already been clustered into ASVs, especially when there is associated sample data, phylogenetic tree, and/or taxonomic assignment of the ASVs. 
 
-<br>
+
 ---
 ---
 <br>
@@ -33,7 +33,7 @@ This workflow assumes that your sequencing data meets certain criteria:
 - Your sequences are all in the same directory
 
  
-<br>
+
 ---
 ---
 <br>
@@ -59,14 +59,11 @@ We will be operating in CyVerse, a virtual environment that already has the prog
 
 Highland lakes info here.....
 
-<br>
----
----
-<br>
+
 
 **Now, let's get started!**
 
-<br>
+
 ---
 ---
 <br>
@@ -98,7 +95,7 @@ The first step we are going to do is check the quality of our data using fastqc.
 Above is a screenshot of the fastqc result for the forward and reverse files of two of the samples from our Highland Lake dataset. 
 ***FILL IN WITH COMMENTS ON FASTQC RESULT FOR HIGHLAND LAKE***
 
-<br>
+
 ---
 ---
 <br>
@@ -145,7 +142,7 @@ In the above loop, after passing cutadapt the listed arguments as well as the fo
 
 ***DO WE RUN FASTQC AGAIN AS WELL CAUSE THERE IS A QUALITY PLOT THERE OR JUST DO QUALITY PLOT SEPERATELY?***
 
-<br>
+
 ---
 ---
 <br>
@@ -194,7 +191,7 @@ samples <- sapply(strsplit(basename(forward_reads), "_"), `[`, 1)
 
 Now that we have these variables set up, we can proceed with our data processing!!
 
-<br>
+
 ---
 ---
 <br>
@@ -222,7 +219,7 @@ When reading these plots, you will find the bases are along the x-axis and the q
 
 A quality score of 30 is equal to an expected error rate of 1 in 1,000, and this will be the cutoff we use in our analysis. Looking at the above graphs, you will see that overall the quality looks good. The forward reads maintain a high quality until around 250bp, while the reverse reads maintain a high quality until around 200bp. The fact that the reverse read drops in quality before the forward read does should not be of concern, as this is a common occurrence with chemistry.
 
-<br>
+
 ---
 ---
 <br>
@@ -295,7 +292,7 @@ Below is the output of the first four reverse reads:
 
 <center><img src="../images/QualityPlotReverseFiltered2.png"></center>
 
-<br>
+
 ---
 ---
 <br>
@@ -331,7 +328,7 @@ Below is the graph of our forward error plot (reverse looks very similar):
 ***FOLLOWING PARAGRAPH IS STOLEN AND SHOULD BE REWRITTEN***
 The error rates for each possible transition are shown. Points are the observed error rates for each consensus quality score. The black line shows the estimated error rates after convergence of the machine-learning algorithm. The red line shows the error rates expected under the nominal definition of the Q-score. Here the estimated error rates (black line) are a good fit to the observed rates (points), and the error rates drop with increased quality as expected. Everything looks reasonable and we proceed with confidence.
 
-<br>
+
 ---
 ---
 <br>
@@ -351,7 +348,7 @@ names(derep_reverse) <- samples
  # derep_reverse            Large list (49 elements, 642.8 MB)
 ```
 
-<br>
+
 ---
 ---
 <br>
@@ -373,7 +370,7 @@ dada_reverse <- dada(derep_reverse, err=err_reverse_reads, pool="pseudo")
  # dada_reverse            List of 49
 ```
 
-<br>
+
 ---
 ---
 <br>
@@ -395,7 +392,7 @@ merged_amplicons <- mergePairs(dada_forward,
                               
 ```
 
-<br>
+
 ---
 ---
 <br>
@@ -458,7 +455,7 @@ head(summary_tab)
 
 Now we have our ASVs ready to be assigned taxonomy so we can identify what is really existing in our samples!
 
-<br>
+
 ---
 ---
 <br>
@@ -466,7 +463,7 @@ Now we have our ASVs ready to be assigned taxonomy so we can identify what is re
 ## Assigning taxonomy
 
 
-<br>
+
 ---
 ---
 <br>
@@ -474,7 +471,7 @@ Now we have our ASVs ready to be assigned taxonomy so we can identify what is re
 # Visualization with Phyloseq
 
 
-<br>
+
 ---
 ---
 <br>
