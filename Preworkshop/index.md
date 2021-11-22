@@ -53,6 +53,21 @@ _**1hr Lunch Break and Troubleshooting**_
 
 <br>
 
+Once you have a CyVerse account set up, you can join the Maine-eDNA Metabarcoding workshop here: <https://user.cyverse.org/workshops/86>
+
+ <center><img src="../images/CyVerse_workshop.png" width="500"></center>
+
+
+<br>
+
+**For additional documentation on using CyVerse, such as account setup information and understanding the Discovery Environment tools and applications, access the materials here: <https://github.com/umaine-research/metabarcoding-cyverse/wiki>.**
+
+
+
+
+<br>
+
+
 ### 2) Slack 
 > Required for workshop
 
