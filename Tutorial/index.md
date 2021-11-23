@@ -151,7 +151,7 @@ done
 
 In the above loop, after passing cutadapt the listed arguments as well as the forward and reverse files we wanted it to run on, we then directed the stats output to be stored in the file `Cutadapt_trimming_stats.txt`. We can take a look at this file to get an idea of how many reads were recovered after this trimming step. Below is a partial screenshot of our `Cutadapt_trimming_stats.txt` file.
 
-<center><img src="../images/cutadapt.png"></center>
+<center><img src="../images/cutadapt2.png"></center>
 
 ---
 ---
