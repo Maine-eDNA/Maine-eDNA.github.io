@@ -527,7 +527,7 @@ p
 
 
 Ordination plots, either colored by layer or temperature:
-``` {R ordinationPlots}
+```R
 library(vegan)
 
 ps.prop <- transform_sample_counts(ps, function(otu) otu/sum(otu))
