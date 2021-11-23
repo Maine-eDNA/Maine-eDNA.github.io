@@ -88,7 +88,7 @@ Highland lakes info here.....
 |8|`mergePairs()`|merge forward and reverse reads to further refine ASVs (dada2)|
 |9|`makeSequenceTable()`|generate a count table (dada2)|
 |10|`removeBimeraDenovo()`|screen for and remove chimeras (dada2)|
-|11|`IdTaxa()`|assign taxonomy (dada2)|
+|11|`assignTaxonomy()`|assign taxonomy (dada2)|
 
 <br>
 
