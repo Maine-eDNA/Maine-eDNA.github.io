@@ -20,7 +20,6 @@ During this tutorial, we are going to run through one way to process an amplicon
 
 **Phlyoseq:** [Phyloseq](https://joey711.github.io/phyloseq/){:target="_blank"} is an R package that analyzes and graphically displays sequencing data that has already been clustered into ASVs, especially when there is associated sample data, phylogenetic tree, and/or taxonomic assignment of the ASVs. 
 
-
 ---
 ---
 <br>
@@ -32,44 +31,48 @@ This workflow assumes that your sequencing data meets certain criteria:
 - The primer sequences have not been removed from your sequences
 - Your sequences are all in the same directory
 
- 
-
 ---
 ---
 <br>
 
-# Working environment
+# Set Up CyVerse Working Environment
 We will be operating in CyVerse, a virtual environment that already has the programs and packages installed that this pipeline requires. By now, you should have gotten a CyVerse account and joined our workshop. First things first, lets set up our Discovery Environment that we will be working in today:
 
-1. Log into CyVerse. You should now be at user.cyverse.org/services
-2. Under "My Services", click on "Discovery Environment"
-3. Click "Launch". You should now be at de.cyverse.org
-4. Click the 9-square logo "Apps" button on the left
-5. Click on the dropdown menu to go to "shared with me" and choose "metabarcoding-maine"
+1. Log into CyVerse. You should now be at user.cyverse.org/services.
+2. Under "My Services", click on "Discovery Environment".
+3. Click "Launch". You should now be at de.cyverse.org.
+4. Click the 9-square logo "Apps" button on the left.
+5. Click on the dropdown menu to go to "shared with me" and choose "metabarcoding-maine".
 6. Set up your environment:
   - Analysis Info: You can leave this all on default settings
-  - Parameters: Click on "browse" for input folder, go to "Shared with me" and navigate to "robinsleith". choose to input 2K_HighlandLake folder
+  - Parameters: Click on "browse" for input folder, go to "Shared with me" and navigate to "robinsleith". Choose to input the **2K_Highland_18S** folder.
   - Advanced Settings: 4 CPU Cores, 4 GiB, 4 GiB
   - You're good to go! click "Launch Analysis".
 7. The environment you just created should be at the top of your analysis list. On the right hand side, click on the logo of the box and arrow to open up the environment window. This may take a few moments, so be patient.
 
+Finally, we need to create a few directories that we will use in this tutorial and copy the data from the "2K_Highland_18S"" directory (which is currently nested in our "work" directory) to our "raw_reads" directory. To do so, navigate to the **terminal** tab of the RStudio screen. You should be in your home directory (indicated by "~$") and run the following code:
+
+```bash
+mkdir fastqc
+mkdir raw_reads
+mkdir trimmed
+mkdir filtered
+
+cp work/2K_Highland_18S/* raw_reads
+```
+
 <br>
 
 # Data Overview
-
 Highland lakes info here.....
 
-
-
 **Now, let's get started!**
-
 
 ---
 ---
 <br>
 
 # Processing overview
-
 
 ||Command|What it's doing|
 |:--:|:--------:|----------|
@@ -88,13 +91,18 @@ Highland lakes info here.....
 <br>
 
 ## Check Data Quality
-The first step we are going to do is check the quality of our data using fastqc. To run this analysis on a single file, you can run `fastqc filename.fastq.gz`, where `filename` is the name of the file. However, you can also choose to run this on all of the sequence files in your directory like so: `fastqc *.fastq.gz`. The output file is an html that you can easily view.
+The first step we are going to do is check the quality of our data using fastqc. To run this analysis on a single file, you can run `fastqc filename.fastq.gz`, where `filename` is the name of the file. However, you can also choose to run this on all of the sequence files in your directory like so: `fastqc *.fastq.gz`. The output file is an html that you can easily view. We will run fastqc on all of our files, then move them to our fastqc directory.
 
-***INSERT FASTQC SCREENSHOT HERE***
+```bash
+fastqc raw_reads/*fastq.gz
+mv raw_reads/*fastqc* fastqc
+```
 
-Above is a screenshot of the fastqc result for the forward and reverse files of two of the samples from our Highland Lake dataset. 
-***FILL IN WITH COMMENTS ON FASTQC RESULT FOR HIGHLAND LAKE***
+Now, if we navigate to our fastqc directory, there should be a .zip and .html fastqc file for each fastq file we have. To view the results, open one of the .html files and view in web browser.
 
+Below is a partial screenshot of the fastqc result for the forward and reverse files of the first sample from our Highland Lake dataset. 
+
+<center><img src="../images/fastQC.png"></center>
 
 ---
 ---
@@ -114,34 +122,36 @@ Our next step is to remove the primers from our sequences using cutadapt. Cutada
 - **input file:** file name for forward reads. `forwardinput.fq.gz`
 - **output file:** file name for reverse reads. `reverseinput.fq.gz`
 
-Cutadapt only works on one file at a time. Therefore, when we would like to run this operation on our entire dataset, we wrap it in a loop to do so easily. 
-***HOW DO WE WANT TO TALK ABOUT MAKING A FILE WITH FILENAMES, R OR COMMANDLINE?***
+Cutadapt only works on one file at a time. Therefore, when we would like to run this operation on our entire dataset, we wrap it in a loop to do so easily. To do so, we first need to create a file that has all of our base sample names in it:
 
-***CHECK THIS CODE TO MAKE SURE IT MATCHES HOW WE WOULD RUN IT FOR HIGHLAND LAKE SET***
+```bash
+cd raw_reads
+
+ls *_R1_001.fastq.gz | cut -f1 -d "R" > samples
+```
+
+Now that we have the list of files we will loop through, we can run the following code to run cutadapt on all 46 paired files at once.
+
 ```bash
 for sample in $(cat samples)
 do
 
-    echo "On sample: $sample"
+echo "On sample: $sample"
     
-    cutadapt -a ^CYGCGGTAATTCCAGCTC...CRAAGAYGATYAGATACCRT \
-    -A ^AYGGTATCTRATCRTCTTYG...GAGCTGGAATTACCGCRG \
-    -m 150 -M 550 \
-    --discard-untrimmed \
-    -o ${sample}_R1_trimmed.fastq.gz \
-    -p ${sample}_R2_trimmed.fastq.gz \
-    ${sample}_R1.fastq.gz \
-    ${sample}_R2.fastq.gz >> Cutadapt_trimming_stats.txt 2>&1
+  cutadapt -a ^CYGCGGTAATTCCAGCTC...CRAAGAYGATYAGATACCRT \
+  -A ^AYGGTATCTRATCRTCTTYG...GAGCTGGAATTACCGCRG \
+  -m 150 -M 550 --discard-untrimmed \
+  -o ${sample}R1_001_trimmed.fastq.gz \
+  -p ${sample}R2_001_trimmed.fastq.gz \
+  ${sample}R1_001.fastq.gz \
+  ${sample}R2_001.fastq.gz >> Cutadapt_trimming_stats.txt 2>&1
 
 done
 ```
 
-In the above loop, after passing cutadapt the listed arguments as well as the forward and reverse files we wanted it to run on, we then directed the stats output to be stored in the file `Cutadapt_trimming_stats.txt`. We can take a look at this file to get an idea of how many reads were recovered after this trimming step.
+In the above loop, after passing cutadapt the listed arguments as well as the forward and reverse files we wanted it to run on, we then directed the stats output to be stored in the file `Cutadapt_trimming_stats.txt`. We can take a look at this file to get an idea of how many reads were recovered after this trimming step. Below is a partial screenshot of our `Cutadapt_trimming_stats.txt` file.
 
-***VISUAL OF CUTADAPT OUTPUT?***
-
-***DO WE RUN FASTQC AGAIN AS WELL CAUSE THERE IS A QUALITY PLOT THERE OR JUST DO QUALITY PLOT SEPERATELY?***
-
+<center><img src="../images/cutadapt.png"></center>
 
 ---
 ---
@@ -150,47 +160,42 @@ In the above loop, after passing cutadapt the listed arguments as well as the fo
 
 ## Setting Up R Environment
 
-From here on out, we will be working in R. Thus, the first step is to ensure we have the dada2 package loaded in our environment and that our working directory is the directory containing our fastq files that have been processed through cutadapt.
+From here on out, we will be working in R. Thus, the first step is to ensure we have the dada2 package loaded in our environment.
 
 ``` R
 library(dada2)
-packageVersion("dada2") 
-#1.18.0 for Rene when this was written in October 2021
-
 ```
 
 Next, we will set up some variable names in our environment to make processing our samples easier.
 
 
 ``` R
-#set this to the path where your fastq files live
-path <- "MetabarcodingWorkshop/reads" 
+path <- "trimmed"
 
 list.files(path)
  ## Output:
- #[1] "KAW1_S202_L001_R1_001.fastq.gz" 
- #[2] "KAW1_S202_L001_R2_001.fastq.gz" 
- #[3] "KAW10_S215_L001_R1_001.fastq.gz"
- #[4] "KAW10_S215_L001_R2_001.fastq.gz"
- #[5] "KAW11_S227_L001_R1_001.fastq.gz"
- #[6] "KAW11_S227_L001_R2_001.fastq.gz"
- #... should have 98 files
+ # [1] "2K_KAW1_S202_L001_R1_001_trimmed.fastq.gz" 
+ # [2] "2K_KAW1_S202_L001_R2_001_trimmed.fastq.gz" 
+ # [3] "2K_KAW10_S215_L001_R1_001_trimmed.fastq.gz"
+ # [4] "2K_KAW10_S215_L001_R2_001_trimmed.fastq.gz"
+ # [5] "2K_KAW11_S227_L001_R1_001_trimmed.fastq.gz"
+ # [6] "2K_KAW11_S227_L001_R2_001_trimmed.fastq.gz"
+ # ... should have 92 files
 
-forward_reads <- sort(list.files(path, pattern="_R1_001.fastq.gz", full.names = TRUE))
+forward_reads <- sort(list.files(path, pattern="_R1_001_trimmed.fastq.gz", full.names = TRUE))
 
-reverse_reads <- sort(list.files(path, pattern="_R2_001.fastq.gz", full.names = TRUE))
+reverse_reads <- sort(list.files(path, pattern="_R2_001_trimmed.fastq.gz", full.names = TRUE))
 
-samples <- sapply(strsplit(basename(forward_reads), "_"), `[`, 1)
+samples <- sapply(strsplit(basename(forward_reads), "_R"), `[`, 1)
 
  ##Global Environment:
- # forward_reads    chr [1:49] "reads/KAW1_S202_L001_R1_001.fastq.gz"...
- # reverse_reads    chr [1:49] "reads/KAW1_S202_L001_R2_001.fastq.gz"...
- # samples          chr [1:49] "KAW1" "KAW10" "KAW11" "KAW12"...
+ # forward_reads    chr [1:46] "trimmed/2K_KAW1_S202_L001_R1_001.fastq.gz"...
+ # reverse_reads    chr [1:46] "trimmed/2K_KAW1_S202_L001_R2_001.fastq.gz"...
+ # samples          chr [1:46] "2K_KAW1_S202_L001" "2K_KAW10_S215_L001"...
 
 ```
 
 Now that we have these variables set up, we can proceed with our data processing!!
-
 
 ---
 ---
@@ -209,16 +214,15 @@ plotQualityProfile(reverse_reads[1:4])
 
 Below is the output of the first four forward reads:
 
-<center><img src="../images/QualityPlotForward2.png"></center>
+<center><img src="../images/QualityPlot2KF.png"></center>
 
 Below is the output of the first four reverse reads:
 
-<center><img src="../images/QualityPlotReverse2.png"></center>
+<center><img src="../images/QualityPlot2KR.png"></center>
 
 When reading these plots, you will find the bases are along the x-axis and the quality score is on the y-axis. The black underlying heatmap shows the frequency of each score at each base position, the green line is the median quality score at that base position, and the orange lines show the quartiles.
 
 A quality score of 30 is equal to an expected error rate of 1 in 1,000, and this will be the cutoff we use in our analysis. Looking at the above graphs, you will see that overall the quality looks good. The forward reads maintain a high quality until around 250bp, while the reverse reads maintain a high quality until around 200bp. The fact that the reverse read drops in quality before the forward read does should not be of concern, as this is a common occurrence with chemistry.
-
 
 ---
 ---
@@ -231,12 +235,13 @@ With the knowledge that viewing our quality plots has provided, we will now trim
 First, we will create a new set of variables for our filtered reads to be assigned to.
 
 ```R
-filtered_forward_reads <- paste0(samples, "_R1_filtered.fq.gz")
-filtered_reverse_reads <- paste0(samples, "_R2_filtered.fq.gz")
+filterpath <- "filtered/" #where our filtered files will live
+filtered_reverse_reads <- paste0(filterpath, samples, "_R2_filtered.fq.gz")
+filtered_forward_reads <- paste0(filterpath, samples, "_R1_filtered.fq.gz")
 
  ##Global Environment:
- # filtered_forward_reads    chr [1:49] "KAW1_R1_filtered.fq.gz" ...
- # filtered_reverse_reads    chr [1:49] "KAW1_R2_filtered.fq.gz" ...
+ # filtered_forward_reads    chr [1:46] "filtered/2K_KAW1_S202_L001_R1_fil...
+ # filtered_reverse_reads    chr [1:46] "filtered/2K_KAW1_S202_L001_R2_fil...
 ```
 
 Next, we will run the `filterAndTrim()` function to trim our reads based on our quality filter of 30 and above, passing the function our input files, output file name, and a few parameters. The parameters we will use are as follows:
@@ -261,7 +266,7 @@ filtered_out <- filterAndTrim(forward_reads,
                               truncLen=c(250,200))
                         
  ##Global Environment:
- # filtered_out     num [1:49, 1:2] 26214 16767 32055 29206 25789 ...
+ # filtered_out     num [1:46, 1:2] 1964 1975 1972 1976 1976 ...
 ```
 
 The `filtered_out` matrix we created has each sample name, the number of reads it originally had, and the number of reads it has now that the samples have been filtered. We can look at that to see the difference in counts before and after.
@@ -269,12 +274,13 @@ The `filtered_out` matrix we created has each sample name, the number of reads i
 ```R
 filtered_out
                         
-#                                  reads.in reads.out
-# KAW1_S202_L001_R1_001.fastq.gz     26214     23016
-# KAW10_S215_L001_R1_001.fastq.gz    16767     14624
-# KAW11_S227_L001_R1_001.fastq.gz    32055     27841
-# KAW12_S239_L001_R1_001.fastq.gz    29206     25121
-# KAW13_S251_L001_R1_001.fastq.gz    25789     22684
+  #                                            reads.in reads.out
+  # 2K_KAW1_S202_L001_R1_001_trimmed.fastq.gz      1964      1744
+  # 2K_KAW10_S215_L001_R1_001_trimmed.fastq.gz     1975      1727
+  # 2K_KAW11_S227_L001_R1_001_trimmed.fastq.gz     1972      1710
+  # 2K_KAW12_S239_L001_R1_001_trimmed.fastq.gz     1976      1688
+  # 2K_KAW13_S251_L001_R1_001_trimmed.fastq.gz     1976      1718
+  # 2K_KAW14_S263_L001_R1_001_trimmed.fastq.gz     1972      1719
 ```
 
 Another thing we can look at is a quality plot! Similar to before, we can run `plotQualityProfile` on our trimmed and filtered data to verify that the quality of our reads are what we expect them to be.
@@ -286,11 +292,11 @@ plotQualityProfile(filtered_reverse_reads[1:4])
 
 Below is the output of the first four forward reads:
 
-<center><img src="../images/QualityPlotForwardFiltered2.png"></center>
+<center><img src="../images/QualityPlot2KFFILT.png"></center>
 
 Below is the output of the first four reverse reads:
 
-<center><img src="../images/QualityPlotReverseFiltered2.png"></center>
+<center><img src="../images/QualityPlot2KRFILT.png"></center>
 
 
 ---
@@ -305,13 +311,6 @@ Next, we want to create an error model for our dataset, as DADA2 relies on a par
 err_forward_reads <- learnErrors(filtered_forward_reads)
 err_reverse_reads <- learnErrors(filtered_reverse_reads)
 
-#set multithread = TRUE if running on your own system:
-#err_forward_reads <- learnErrors(filtered_forward_reads, multithread = TRUE)
-#err_reverse_reads <- learnErrors(filtered_reverse_reads, multithread = TRUE)
-
- ##Global Environment:
- # err_forward_reads        List of 3
- # err_reverse_reads        List of 3
 ```
 
 We can visualize our model with the `plotErrors()` function.
@@ -323,7 +322,7 @@ plotErrors(err_reverse_reads, nominalQ=TRUE)
 
 Below is the graph of our forward error plot (reverse looks very similar):
 
-<center><img src="../images/ErrorPlotForward2.png"></center>
+<center><img src="../images/Error2KF.png"></center>
 
 ***FOLLOWING PARAGRAPH IS STOLEN AND SHOULD BE REWRITTEN***
 The error rates for each possible transition are shown. Points are the observed error rates for each consensus quality score. The black line shows the estimated error rates after convergence of the machine-learning algorithm. The red line shows the error rates expected under the nominal definition of the Q-score. Here the estimated error rates (black line) are a good fit to the observed rates (points), and the error rates drop with increased quality as expected. Everything looks reasonable and we proceed with confidence.
@@ -343,11 +342,7 @@ names(derep_forward) <- samples
 derep_reverse <- derepFastq(filtered_reverse_reads, verbose=TRUE)
 names(derep_reverse) <- samples
 
- ##Global Environment:
- # derep_forward            Large list (49 elements, 972.1 MB)
- # derep_reverse            Large list (49 elements, 642.8 MB)
 ```
-
 
 ---
 ---
@@ -358,18 +353,11 @@ names(derep_reverse) <- samples
 Now it is time to infer true biological sequences - the main inference algorithm of DADA2. DADA2 uses quality profiles and abundances of each unique sequence to figure out if each sequence is more likely to be of biological origin or spurious. You can read more on the DADA2 site.
 
 ```R
-dada_forward <- dada(derep_forward, err=err_forward_reads, pool="pseudo")
-dada_reverse <- dada(derep_reverse, err=err_reverse_reads, pool="pseudo")
 
-#set multithread = TRUE if running on your own system:
-#dada_forward <- dada(derep_forward, err=err_forward_reads, pool="pseudo", multithread = TRUE)
-#dada_reverse <- dada(derep_reverse, err=err_reverse_reads, pool="pseudo", multithread = TRUE)
+dada_forward <- dada(derep_forward, err=err_forward_reads, pool="pseudo", multithread = TRUE)
+dada_reverse <- dada(derep_reverse, err=err_reverse_reads, pool="pseudo", multithread = TRUE)
 
- ##Global Environment:
- # dada_forward            List of 49
- # dada_reverse            List of 49
 ```
-
 
 ---
 ---
@@ -387,11 +375,8 @@ merged_amplicons <- mergePairs(dada_forward,
                               derep_reverse, 
                               minOverlap=20)
 
- ##Global Environment:
- # merged_amplicons            Large list (49 elements, 19.1 MB)
                               
 ```
-
 
 ---
 ---
@@ -404,10 +389,8 @@ To summarize the workflow nicely, we will use the `makeSequenceTable()` function
 ```R
 seqtab <- makeSequenceTable(merged_amplicons)
 dim(seqtab)
-# 49 7082
+# 46 625
 
-##Global Environment:
- # seqtab            Lagre matrix (347018 elements, 4.6 MB)
 ```
 
 While useful, the ASV table is not the easiest to read. Thus, we will mold the data a bit to make it more user-friendly.
@@ -416,12 +399,14 @@ First, we will identify chimeras. DADA2 identifies likely chimeras by aligning e
 
 ```R
 seqtab.nochim <- removeBimeraDenovo(seqtab, multithread=TRUE, verbose=TRUE)
-# Identified 4787 bimeras out of 7082 input sequences.
+# Identified 53 bimeras out of 625 input sequences.
 
 dim(seqtab.nochim)
-# 49 2295
+# 46 572
 sum(seqtab.nochim)/sum(seqtab)
-# 0.9471908
+# 0.9977182
+
+write.csv(seqtab.nochim, "seqtab-nochim.csv")
 ```
 
 Next, we will create a table with the count of sequences at each step of our pipeline and write it out to a file `read-count-tracking.tsv`.
@@ -437,20 +422,38 @@ summary_tab <- data.frame(row.names=samples, dada2_input=filtered_out[,1],
                final_perc_reads_retained=round(rowSums(seqtab.nochim)/filtered_out[,1]*100, 1))
 
 write.table(summary_tab, "read-count-tracking.tsv", quote=FALSE, sep="\t", col.names=NA)
-
-##Global Environment:
- # summary_tab            49 obs of 7 variables
  
 head(summary_tab)
 
-#       dada2_input filtered dada_f dada_r merged nonchim final_perc_reads_retained
-# KAW1        26214    23016  22749  22835  21544   19904                      75.9
-# KAW10       16767    14624  14514  14528  13567   12605                      75.2
-# KAW11       32055    27841  27683  27737  26860   25673                      80.1
-# KAW12       29206    25121  24971  25015  22817   21942                      75.1
-# KAW13       25789    22684  22496  22490  21523   19665                      76.3
-# KAW14       30269    26219  25963  25958  24671   22486                      74.3
+  #                    dada2_input filtered dada_f dada_r merged nonchim final_perc_reads_retained
+  # 2K_KAW1_S202_L001         1964     1744   1699   1714   1544    1542                      78.5
+  # 2K_KAW10_S215_L001        1975     1727   1663   1705   1536    1536                      77.8
+  # 2K_KAW11_S227_L001        1972     1710   1646   1686   1564    1563                      79.3
+  # 2K_KAW12_S239_L001        1976     1688   1635   1670   1467    1467                      74.2
+  # 2K_KAW13_S251_L001        1976     1718   1669   1703   1565    1565                      79.2
+  # 2K_KAW14_S263_L001        1972     1719   1649   1702   1536    1531                      77.6
 
+```
+
+We will now create a fasta file with the ASVs that have been identified in our analysis.
+
+```R
+asv_seqs <- colnames(seqtab.nochim)
+asv_headers <- vector(dim(seqtab.nochim)[2], mode="character")
+
+for (i in 1:dim(seqtab.nochim)[2]) {
+  asv_headers[i] <- paste(">ASV", i, sep="_")
+}
+
+asv_fasta <- c(rbind(asv_headers, asv_seqs))
+write(asv_fasta, "ASVs.fa")
+```
+
+ANd finally, a count table that tells us how many of each ASV was found in each sample.
+```R
+asv_tab <- t(seqtab.nochim)
+row.names(asv_tab) <- sub(">", "", asv_headers)
+write.table(asv_tab, "ASVs_counts.tsv", sep="\t", quote=F, col.names=NA)
 ```
 
 Now we have our ASVs ready to be assigned taxonomy so we can identify what is really existing in our samples!
@@ -462,6 +465,15 @@ Now we have our ASVs ready to be assigned taxonomy so we can identify what is re
 
 ## Assigning taxonomy
 
+Now that we have our ASVs identified, we want to determine which organism each of them correlate to. To do this, we will run the function `assignTaxonomy`. We will hand it our sequence table with the chimeras removed and our reference database we want it to search through. In this case, we are using the reference database *PR2*, which is in our "raw_reads" folder. This will most likely take about 15 minutes to run.
+
+```R
+taxa <- assignTaxonomy(seqtab.nochim, "raw_reads/pr2_version_4.14.0_SSU_dada2.fasta.gz", multithread=T, minBoot=50)
+
+rownames(taxa) <- gsub(pattern=">", replacement="", x=asv_headers)
+
+write.csv(taxa, "ASV_taxa.csv")
+```
 
 
 ---
@@ -470,7 +482,77 @@ Now we have our ASVs ready to be assigned taxonomy so we can identify what is re
 
 # Visualization with Phyloseq
 
+Now that we have all of our ASVs assigned to their proper taxonomy according to the *PR2* database, we can visualize our data with the R package phyloseq. To do this, first, we need to load the phyloseq package in our R environment and create a phyloseq object based on our tables we have created. This will also require us to load in one more document in our "raw_reads" folder called "info_18S", which provides metadata necessary to create our phyloseq object.
 
+```R
+
+library(phyloseq)
+library(ggplot2)
+
+info <- read.table("raw_reads/info_18S.txt", header=T,sep="\t")
+rownames(info) <- rownames(seqtab.nochim)
+
+rawasvs <- phyloseq(otu_table(asv_tab, taxa_are_rows=T), 
+                    sample_data(info), 
+                    tax_table(as.matrix(taxa)))
+
+rawasvs@sam_data
+nsamples(rawasvs)
+head(rawasvs@otu_table)
+head(rawasvs@tax_table)
+
+
+wh0 <-  genefilter_sample(rawasvs, filterfun_sample(function(x) x > 2), A=2)
+ps <- prune_taxa(wh0, rawasvs)
+
+```
+
+With our newly created phyloseq object we can now plot bar plots, ordination plots, and richness plots. Below are a few examples of these graphs:
+
+A bar plot of the twenty most common ASVs:
+```R
+top20 <- names(sort(taxa_sums(ps), decreasing=TRUE))[1:200]
+ps.top20 <- transform_sample_counts(ps, function(OTU) OTU/sum(OTU))
+ps.top20 <- prune_taxa(top20, ps.top20)
+#ps.top20@sam_data
+
+p <- plot_bar(ps.top20, x="JulDay", fill="Phylum") +
+  theme(text = element_text(size = 14) , legend.position = "right") +
+  scale_x_continuous(breaks=c(186,192,195,199,205,212,219,227,233,241,255,268,285))+
+  facet_wrap(~Layer)
+p
+```
+
+<center><img src="../images/Top20.png"></center>
+
+
+Ordination plots, either colored by layer or temperature:
+``` {R ordinationPlots}
+library(vegan)
+
+ps.prop <- transform_sample_counts(ps, function(otu) otu/sum(otu))
+ord.nmds.bray <- ordinate(ps.prop, method="NMDS", distance="bray")
+
+plot_ordination(ps.prop, ord.nmds.bray, color="Layer",shape="Month_char", title="Bray NMDS")+
+  geom_point(size = 7)
+
+
+plot_ordination(ps.prop, ord.nmds.bray, color="Temp",shape="Month_char", title="Bray NMDS")+
+  geom_point(size = 7)
+```
+
+<center><img src="../images/OrdPlot1.png"></center>
+
+<center><img src="../images/OrdPlot2.png"></center>
+
+
+A plot showing richness based on different methods:
+```R
+plot_richness(ps, x="Sample.ID",measures=c("Observed", "Shannon", "Chao1"),
+              color="Layer", shape="Month_char") 
+```
+
+<center><img src="../images/Richness.png"></center>
 
 ---
 ---
