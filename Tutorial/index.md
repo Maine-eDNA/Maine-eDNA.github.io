@@ -66,7 +66,7 @@ cp work/2K_Highland_18S/* raw_reads
 <br>
 
 # Data Overview
-Highland lakes info here.....
+We will be working with a dataset that was the result of a collaboration between Karen Wilson (USM) and Pete Countway (Bigelow). The dataset is from Highland Lake, a 640 acre lake in the Presumpscot River watershed. The lake has algal blooms that started in 2014 and much work has been done to understand the dynamics of these blooms and their connection to the reintroduction of alewife following a 2010 fishway restoration project. The data for this tutorial are from 2018 and represent 18S rRNA (SSU) metabarcoding, targeting the eukaryotic plankton in the lake. Samples were collected from a single site on 13 days from July to October at multiple depths. Samples were filtered on 0.2um Supor filters, DNA was extracted with the PowerWater DNA extraction kit and sequenced at IMR Dalhousie following their standard protocol.
 
 **Now, let's get started!**
 
@@ -326,9 +326,7 @@ Below is the graph of our forward error plot (reverse looks very similar):
 
 <center><img src="../images/Error2KF.png"></center>
 
-***FOLLOWING PARAGRAPH IS STOLEN AND SHOULD BE REWRITTEN***
-The error rates for each possible transition are shown. Points are the observed error rates for each consensus quality score. The black line shows the estimated error rates after convergence of the machine-learning algorithm. The red line shows the error rates expected under the nominal definition of the Q-score. Here the estimated error rates (black line) are a good fit to the observed rates (points), and the error rates drop with increased quality as expected. Everything looks reasonable and we proceed with confidence.
-
+The above graphs show us the error rates for each possible transition, where the grey points are observed rates, the black line is the estimated error rate, and the red line is the expected error rate. Seeing that our grey points fit nicely to our black line and that our error rates decrease with increasing sequence quality tells us that our data is good to move forward with. 
 
 ---
 ---
