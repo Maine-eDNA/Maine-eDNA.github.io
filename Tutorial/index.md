@@ -82,7 +82,7 @@ First, we will move into the terminal tab to make sure we are in the correct wor
 cd work/
 ```
 
-To get started, create a new RMarkdown file: go to `File > New File > R Markdown...`. Accept all the defaults, click "OK".  Now in the new R Markdown file delete everything and copy paste [this document](https://raw.githubusercontent.com/Maine-eDNA/bioinfo_training/main/HighlandLakeTutorial.Rmd){:target="_blank"} in. Save this R Markdown file (`File > Save`).  This R Markdown file has all the code needed to complete this tutorial. You are strongly encouraged to take your own notes in this R Markdown file as we go through the tutorial.
+To get started, create a new RMarkdown file: go to `File > New File > R Markdown...`. Accept all the defaults, click "OK".  Now in the new R Markdown file delete everything and copy paste [**this document**](https://raw.githubusercontent.com/Maine-eDNA/bioinfo_training/main/HighlandLakeTutorial.Rmd){:target="_blank"} in. Save this R Markdown file (`File > Save`).  This R Markdown file has all the code needed to complete this tutorial. You are strongly encouraged to take your own notes in this R Markdown file as we go through the tutorial.
 
 Now we need to create a few directories that we will use in this tutorial and copy the data from the "2K_Highland_18S"" directory (which is currently nested in our "work" directory) to our "raw_reads" directory. To do so, navigate to the **terminal** tab of the RStudio screen. You should be in your home directory (indicated by "~$") and run the following code:
 
