@@ -439,6 +439,7 @@ seqtab <- makeSequenceTable(merged_amplicons)
 dim(seqtab)
 # 46 625
 
+View(seqtab)
 ```
 
 While useful, the ASV table is not the easiest to read. Thus, we will mold the data a bit to make it more user-friendly.
@@ -451,6 +452,9 @@ seqtab.nochim <- removeBimeraDenovo(seqtab, multithread=TRUE, verbose=TRUE)
 
 dim(seqtab.nochim)
 # 46 572
+
+View(seqtab)
+
 sum(seqtab.nochim)/sum(seqtab)
 # 0.9977182
 
@@ -468,6 +472,8 @@ summary_tab <- data.frame(row.names=samples, dada2_input=filtered_out[,1],
                dada_r=sapply(dada_reverse, getN), merged=sapply(merged_amplicons, getN),
                nonchim=rowSums(seqtab.nochim),
                final_perc_reads_retained=round(rowSums(seqtab.nochim)/filtered_out[,1]*100, 1))
+
+View(summary_tab)
 
 write.table(summary_tab, "~/work/read-count-tracking.tsv", quote=FALSE, sep="\t", col.names=NA)
  
@@ -495,12 +501,17 @@ for (i in 1:dim(seqtab.nochim)[2]) {
 
 asv_fasta <- c(rbind(asv_headers, asv_seqs))
 write(asv_fasta, "~/work/ASVs.fa")
+
+#click on ASVs.fa to view file in R Environment
 ```
 
-ANd finally, a count table that tells us how many of each ASV was found in each sample.
+And finally, a count table that tells us how many of each ASV was found in each sample.
 ```R
 asv_tab <- t(seqtab.nochim)
 row.names(asv_tab) <- sub(">", "", asv_headers)
+
+View(asv_tab)
+
 write.table(asv_tab, "~/work/ASVs_counts.tsv", sep="\t", quote=F, col.names=NA)
 ```
 
