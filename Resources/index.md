@@ -20,18 +20,15 @@ Here are some additional recommended tutorials for metabarcoding data analysis
 If you are interested in continuing working within the CyVerse environment with your own data, follow the instructions below to upload your data onto the server:
 
 1. Choose the data panel on the left
-<center><img src="../images/Step1.png"></center>
 2. Click the Folder button to create a new folder that will hold your reads
-<center><img src="../images/Step2.png"></center>
-<center><img src="../images/Step2b.png"></center>
 3. Navigate to the newly created folder
 4. Click Upload then choose "Browse Local"
-<center><img src="../images/Step4.png"></center>
-<center><img src="../images/Step4b.png"></center>
 5. Select files on your computer to be uploaded then choose "Open"
-<center><img src="../images/Step5.png"></center>
 7. Files will start uploading (this can take time if there are large files)
 
+<center><img src="../images/StepsCyVerse.png"></center>
+
+<br>
 ## Publications
 
 
