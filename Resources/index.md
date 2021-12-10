@@ -14,6 +14,8 @@ Here are some additional recommended tutorials for metabarcoding data analysis
 
 - [Qiime2 - Moving Pictures Tutorial](https://docs.qiime2.org/2021.8/tutorials/moving-pictures/)
 
+- [PhyloSeq Visualization Tutorial](https://joey711.github.io/phyloseq/plot_ordination-examples.html)
+
 <br>
 ## Uploading Data onto CyVerse
 
