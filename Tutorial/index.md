@@ -77,14 +77,14 @@ Once the app loads you will be greated by a familiar RStudio window.  We will be
 |10|`nano`|open file in text editor|`nano filename`|
 
 <br>
-First, we will move into the terminal tab to make sure we are in the correct working directory. We want to make sure to be working from within the `WORK` folder.
+First, we will move into the terminal tab to make sure we are in the correct working directory. We want to make sure to be working from within the `WORK/DATA/OUTPUT` folder. Note - this is slightly different from when we ran the tutorial in December 2021, where we were doing work in the `WORK` directory, CyVerse has changed their setup and now to save any files you must have them living in the `WORK/DATA/OUTPUT` directory.
 ```bash
-cd work/
+cd work/data/output/
 ```
 
 To get started, create a new RMarkdown file: go to `File > New File > R Markdown...`. Accept all the defaults, click "OK".  Now in the new R Markdown file delete everything and copy paste [**this document**](https://raw.githubusercontent.com/Maine-eDNA/bioinfo_training/main/HighlandLakeTutorial.Rmd){:target="_blank"} in. Save this R Markdown file (`File > Save`).  This R Markdown file has all the code needed to complete this tutorial. You are strongly encouraged to take your own notes in this R Markdown file as we go through the tutorial.
 
-Now we need to create a few directories that we will use in this tutorial and copy the data from the "2K_Highland_18S"" directory (which is currently nested in our "work" directory) to our "raw_reads" directory. To do so, navigate to the **terminal** tab of the RStudio screen. You should be in your home directory (indicated by "~$") and run the following code:
+Now we need to create a few directories that we will use in this tutorial and copy the data from the "2K_Highland_18S"" directory (which is currently nested in our "work" directory) to our "raw_reads" directory. To do so, navigate to the **terminal** tab of the RStudio screen. You should be in your output directory (indicated by "~/work/data/output/$") and run the following code:
 
 ```bash
 mkdir fastqc
@@ -92,7 +92,7 @@ mkdir raw_reads
 mkdir trimmed
 mkdir filtered
 
-cp ~/work/2K_Highland_18S/* raw_reads
+cp ~/work/data/input/2K_Highland_18S/* raw_reads
 ```
 
 <br>
@@ -209,7 +209,7 @@ Next, we will set up some variable names in our environment to make processing o
 
 
 ``` R
-path <- "~/work/trimmed/"
+path <- "~/work/data/output/trimmed/"
 
 list.files(path)
  ## Output:
@@ -250,10 +250,10 @@ library(ggplot2)
 # to run a subset of the reads, select which with square brackets
 # below we are only running the first four in the list we previously created
 plotQualityProfile(forward_reads[1:4])
-ggsave(path="~/work/", filename="forward_quality.png")
+ggsave(path="~/work/data/output/", filename="forward_quality.png")
 
 plotQualityProfile(reverse_reads[1:4])
-ggsave(path="~/work/", filename="reverse_quality.png")
+ggsave(path="~/work/data/output/", filename="reverse_quality.png")
 ```
 
 Below is the output of the first four forward reads:
@@ -279,7 +279,7 @@ With the knowledge that viewing our quality plots has provided, we will now trim
 First, we will create a new set of variables for our filtered reads to be assigned to.
 
 ```R
-filterpath <- "~/work/filtered/" #where our filtered files will live
+filterpath <- "~/work/data/output/filtered/" #where our filtered files will live
 filtered_reverse_reads <- paste0(filterpath, samples, "_R2_filtered.fq.gz")
 filtered_forward_reads <- paste0(filterpath, samples, "_R1_filtered.fq.gz")
 
@@ -331,10 +331,10 @@ Another thing we can look at is a quality plot! Similar to before, we can run `p
 
 ```R
 plotQualityProfile(filtered_forward_reads[1:4])
-ggsave(path="~/work/", filename="forward_filtered_quality.png")
+ggsave(path="~/work/data/output/", filename="forward_filtered_quality.png")
 
 plotQualityProfile(filtered_reverse_reads[1:4])
-ggsave(path="~/work/", filename="reverse_filtered_quality.png")
+ggsave(path="~/work/data/output/", filename="reverse_filtered_quality.png")
 ```
 
 Below is the output of the first four forward reads:
@@ -364,10 +364,10 @@ We can visualize our model with the `plotErrors()` function.
 
 ```R
 plotErrors(err_forward_reads, nominalQ=TRUE)
-ggsave(path="~/work/", filename="forward_errors.png")
+ggsave(path="~/work/data/output/", filename="forward_errors.png")
 
 plotErrors(err_reverse_reads, nominalQ=TRUE)
-ggsave(path="~/work/", filename="reverse_errors.png")
+ggsave(path="~/work/data/output/", filename="reverse_errors.png")
 ```
 
 Below is the graph of our forward error plot (reverse looks very similar):
@@ -458,7 +458,7 @@ View(seqtab)
 sum(seqtab.nochim)/sum(seqtab)
 # 0.9977182
 
-write.csv(seqtab.nochim, "~/work/seqtab-nochim.csv")
+write.csv(seqtab.nochim, "~/work/data/output/seqtab-nochim.csv")
 ```
 
 Next, we will create a table with the count of sequences at each step of our pipeline and write it out to a file `read-count-tracking.tsv`.
@@ -475,7 +475,7 @@ summary_tab <- data.frame(row.names=samples, dada2_input=filtered_out[,1],
 
 View(summary_tab)
 
-write.table(summary_tab, "~/work/read-count-tracking.tsv", quote=FALSE, sep="\t", col.names=NA)
+write.table(summary_tab, "~/work/data/output/read-count-tracking.tsv", quote=FALSE, sep="\t", col.names=NA)
  
 head(summary_tab)
 
@@ -500,7 +500,7 @@ for (i in 1:dim(seqtab.nochim)[2]) {
 }
 
 asv_fasta <- c(rbind(asv_headers, asv_seqs))
-write(asv_fasta, "~/work/ASVs.fa")
+write(asv_fasta, "~/work/data/output/ASVs.fa")
 
 #click on ASVs.fa to view file in R Environment
 ```
@@ -512,7 +512,7 @@ row.names(asv_tab) <- sub(">", "", asv_headers)
 
 View(asv_tab)
 
-write.table(asv_tab, "~/work/ASVs_counts.tsv", sep="\t", quote=F, col.names=NA)
+write.table(asv_tab, "~/work/data/output/ASVs_counts.tsv", sep="\t", quote=F, col.names=NA)
 ```
 
 Now we have our ASVs ready to be assigned taxonomy so we can identify what is really existing in our samples!
@@ -527,11 +527,11 @@ Now we have our ASVs ready to be assigned taxonomy so we can identify what is re
 Now that we have our ASVs identified, we want to determine which organism each of them correlate to. To do this, we will run the function `assignTaxonomy`. We will hand it our sequence table with the chimeras removed and our reference database we want it to search through. In this case, we are using the reference database *PR2*, which is in our "raw_reads" folder. This will most likely take about 15 minutes to run.
 
 ```R
-taxa <- assignTaxonomy(seqtab.nochim, "~/work/raw_reads/pr2_version_4.14.0_SSU_dada2.fasta.gz", multithread=T, minBoot=50)
+taxa <- assignTaxonomy(seqtab.nochim, "~/work/data/input/raw_reads/pr2_version_4.14.0_SSU_dada2.fasta.gz", multithread=T, minBoot=50)
 
 rownames(taxa) <- gsub(pattern=">", replacement="", x=asv_headers)
 
-write.csv(taxa, "~/work/ASV_taxa.csv")
+write.csv(taxa, "~/work/data/output/ASV_taxa.csv")
 ```
 
 
@@ -548,7 +548,7 @@ Now that we have all of our ASVs assigned to their proper taxonomy according to 
 library(phyloseq)
 library(ggplot2)
 
-info <- read.table("~/work/raw_reads/info_18S.txt", header=T,sep="\t")
+info <- read.table("~/work/data/input/raw_reads/info_18S.txt", header=T,sep="\t")
 rownames(info) <- rownames(seqtab.nochim)
 
 rawasvs <- phyloseq(otu_table(asv_tab, taxa_are_rows=T), 
@@ -580,7 +580,7 @@ p <- plot_bar(ps.top20, x="JulDay", fill="Phylum") +
   scale_x_continuous(breaks=c(186,192,195,199,205,212,219,227,233,241,255,268,285))+
   facet_wrap(~Layer)
 p
-ggsave(p, path="~/work/", filename="abundance.png")
+ggsave(p, path="~/work/data/output/", filename="abundance.png")
 ```
 
 <center><img src="../images/Top20.png"></center>
@@ -595,12 +595,12 @@ ord.nmds.bray <- ordinate(ps.prop, method="NMDS", distance="bray")
 
 plot_ordination(ps.prop, ord.nmds.bray, color="Layer",shape="Month_char", title="Bray NMDS")+
   geom_point(size = 7) 
-ggsave(path="~/work/", filename="bray_NMDS_layer.png")  
+ggsave(path="~/work/data/output/", filename="bray_NMDS_layer.png")  
 
 
 plot_ordination(ps.prop, ord.nmds.bray, color="Temp",shape="Month_char", title="Bray NMDS")+
   geom_point(size = 7) 
-ggsave(path="~/work/", filename="bray_NMDS_temp.png")
+ggsave(path="~/work/data/output/", filename="bray_NMDS_temp.png")
 ```
 
 <center><img src="../images/OrdPlot1.png"></center>
@@ -613,7 +613,7 @@ A plot showing richness based on different methods:
 plot_richness(ps, x="Sample.ID",measures=c("Observed", "Shannon", "Chao1"),
               color="Layer", shape="Month_char") 
 
-ggsave(path="~/work/", filename="richness.png")
+ggsave(path="~/work/data/output/", filename="richness.png")
 ```
 
 <center><img src="../images/Richness.png"></center>
