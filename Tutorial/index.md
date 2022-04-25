@@ -35,6 +35,21 @@ This workflow assumes that your sequencing data meets certain criteria:
 ---
 <br>
 
+# Working With Your Own Data
+While this tutorial was created so that it would be easy to work with your own data, there are some changes that you will need to make when doing so:
+
+**Change your input folder:** When setting up your workspace in CyVerse, instead of having your input folder be the 2K_Highland_18S folder that we used as an example, point it towards the folder your data is in. This also means that when you copy your data to your raw_reads folder you will need to change `cp ~/work/data/input/2K_Highland_18S/* raw_reads` to `cp ~/work/data/input/YOUR_FOLDER_NAME_HERE/* raw_reads`
+
+**Change your primers:** The tutorial we led used the 18S Comeau primers. However, if you did not use these primers, you will have to change the sequences that are in the primer removal step to match your primers. Description as to what the proper syntax is to do so is in that section of the tutorial.
+
+**Change your database:** Since the tutorial worked on an 18S dataset, the database used to assign taxonomy was an 18S database, PR2. However, this will not be useful if you are not using the 18S gene or if the organisms of interest are not in PR2. Your database should be composed of the taxa of organisms of interest and the proper gene for your analysis. If you are unsure what database to use, reach out to Robin or Rene via email or slack. If you are interested in using a Gulf of Maine MiFish database, reach out to Rene via email or slack.
+
+**Change your info file:** This file comes up in the step where you are creating a phyloseq object to allow for the visualization of your data. This file has metadata information about your samples that will allow you to categorize your samples for graphs and is necessary to continue the analysis. In the "Visualization with Phyloseq" section of the webpage, you can click on the link that will show you an example file.
+
+---
+---
+<br>
+
 # Set Up CyVerse Working Environment
 We will be operating in CyVerse, a virtual environment that already has the programs and packages installed that this pipeline requires. By now, you should have gotten a CyVerse account and joined our workshop. First things first, lets set up our Discovery Environment that we will be working in today:
 
@@ -542,7 +557,7 @@ write.csv(taxa, "~/work/ASV_taxa.csv")
 
 # Visualization with Phyloseq
 
-Now that we have all of our ASVs assigned to their proper taxonomy according to the *PR2* database, we can visualize our data with the R package phyloseq. To do this, first, we need to load the phyloseq package in our R environment and create a phyloseq object based on our tables we have created. This will also require us to load in one more document in our "raw_reads" folder called "info_18S", which provides metadata necessary to create our phyloseq object.
+Now that we have all of our ASVs assigned to their proper taxonomy according to the *PR2* database, we can visualize our data with the R package phyloseq. To do this, first, we need to load the phyloseq package in our R environment and create a phyloseq object based on our tables we have created. This will also require us to load in one more document in our "raw_reads" folder called "info_18S" (need to create your own for your data? look [HERE](https://raw.githubusercontent.com/Maine-eDNA/bioinfo_training/main/info_18S_example.txt) for an example), which provides metadata necessary to create our phyloseq object.
 
 ```R
 
@@ -623,5 +638,25 @@ ggsave(path="~/work/", filename="richness.png")
 ---
 <br>
 
+# Saving Your Work
 
+As mentioned earlier, CyVerse requires any data that you want saved to live in the `work/data/output` directory. However, your work currently is in the `work` directory, as it processes at a faster rate when working in this directory compared to in the output directory. 
 
+Chances are, you would like to save the work you have done and have access to intermediate outputs as well. To do so, you can either use the GUI on the bottom right hand side of the screen to drag all the files you want saved into the `work/data/output` directory, or you can use the command line to copy files.
+
+To copy all of the files and directories generated in this workflow to your output, go to your terminal window and type the following:
+
+```
+cp -r ~/work/* ~/work/data/output/
+```
+
+Note: when you run this, you **will** get the following two statements, saying it cannot copy your "home" and "data" directories into your "output" directory. **This is okay, we do not want those directories copied over anyways**
+
+```
+cp: cannot create symbolic link '/home/rstudio/work/data/iutput/data': Input/output error
+cp: cannot create symbolic link '/home/rstudio/work/data/iutput/home': Input/output error
+```
+
+---
+---
+<br>
