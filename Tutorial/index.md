@@ -38,7 +38,7 @@ This workflow assumes that your sequencing data meets certain criteria:
 # Working With Your Own Data
 While this tutorial was created so that it would be easy to work with your own data, there are some changes that you will need to make when doing so:
 
-**Change your input folder:** When setting up your workspace in CyVerse, instead of having your input folder be the 2K_Highland_18S folder that we used as an example, point it towards the folder your data is in. This also means that when you copy your data to your raw_reads folder you will need to change `cp ~/work/data/input/2K_Highland_18S/* raw_reads` to `cp ~/work/data/input/YOUR_FOLDER_NAME_HERE/* raw_reads`
+**Change your input folder:** When setting up your workspace in CyVerse, instead of having your input folder be the 2K_Highland_18S folder that we used as an example, point it towards the folder your data is in. This also means that when you copy your data to your raw_reads folder you will need to change "cp ~/work/data/input/2K_Highland_18S/* raw_reads" to "cp ~/work/data/input/YOUR_FOLDER_NAME_HERE/* raw_reads"
 
 **Change your primers:** The tutorial we led used the 18S Comeau primers. However, if you did not use these primers, you will have to change the sequences that are in the primer removal step to match your primers. Description as to what the proper syntax is to do so is in that section of the tutorial.
 
@@ -650,12 +650,19 @@ To copy all of the files and directories generated in this workflow to your outp
 cp -r ~/work/* ~/work/data/output/
 ```
 
-Note: when you run this, you **will** get the following two statements, saying it cannot copy your "home" and "data" directories into your "output" directory. **This is okay, we do not want those directories copied over anyways**
+Note: when you run this, you **will** get the following two statements, saying it cannot copy your "home" and "data" directories into your "output" directory. **This is okay, we do not want those directories copied over anyways.**
 
 ```
 cp: cannot create symbolic link '/home/rstudio/work/data/iutput/data': Input/output error
 cp: cannot create symbolic link '/home/rstudio/work/data/iutput/home': Input/output error
 ```
+
+---
+---
+<br>
+
+That's it! Any questions or concerns about your analysis, feel free to reach out!
+
 
 ---
 ---
