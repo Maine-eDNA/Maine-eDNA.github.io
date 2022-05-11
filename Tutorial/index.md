@@ -1,6 +1,6 @@
 ---
 layout: main
-title: Metagenomics Workflow
+title: Metabarcoding Workflow
 categories: [amplicon, tutorial]
 tags: [amplicon,16S,18S,metabarcoding,dada2]
 permalink: /Tutorial/index
@@ -100,7 +100,7 @@ cd work/
 
 To get started, create a new RMarkdown file: go to `File > New File > R Markdown...`. Accept all the defaults, click "OK".  Now in the new R Markdown file delete everything and copy paste [**this document**](https://raw.githubusercontent.com/Maine-eDNA/bioinfo_training/main/HighlandLakeTutorial.Rmd){:target="_blank"} in. Save this R Markdown file (`File > Save`).  This R Markdown file has all the code needed to complete this tutorial. You are strongly encouraged to take your own notes in this R Markdown file as we go through the tutorial.
 
-Now we need to create a few directories that we will use in this tutorial and copy the data from the "2K_Highland_18S"" directory (which is currently nested in our "work" directory) to our "raw_reads" directory. To do so, navigate to the **terminal** tab of the RStudio screen. You should be in your work directory (indicated by "~/work/$") and run the following code:
+Now we need to create a few directories that we will use in this tutorial and copy the data from the "2K_Highland_18S" directory (which is currently nested in our "work" directory) to our "raw_reads" directory. To do so, navigate to the **terminal** tab of the RStudio screen. You should be in your work directory (indicated by "~/work/$") and run the following code:
 
 ```bash
 mkdir fastqc
@@ -543,7 +543,7 @@ Now we have our ASVs ready to be assigned taxonomy so we can identify what is re
 Now that we have our ASVs identified, we want to determine which organism each of them correlate to. To do this, we will run the function `assignTaxonomy`. We will hand it our sequence table with the chimeras removed and our reference database we want it to search through. In this case, we are using the reference database *PR2*, which is in our "raw_reads" folder. This will most likely take about 15 minutes to run.
 
 ```R
-taxa <- assignTaxonomy(seqtab.nochim, "~/work/data/input/raw_reads/pr2_version_4.14.0_SSU_dada2.fasta.gz", multithread=T, minBoot=50)
+taxa <- assignTaxonomy(seqtab.nochim, "~/work/raw_reads/pr2_version_4.14.0_SSU_dada2.fasta.gz", multithread=T, minBoot=50)
 
 rownames(taxa) <- gsub(pattern=">", replacement="", x=asv_headers)
 
