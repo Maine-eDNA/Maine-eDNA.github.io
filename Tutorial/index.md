@@ -40,6 +40,8 @@ While this tutorial was created so that it would be easy to work with your own d
 
 **Change your input folder:** When setting up your workspace in CyVerse, instead of having your input folder be the 2K_Highland_18S folder that we used as an example, point it towards the folder your data is in. This also means that when you copy your data to your raw_reads folder you will need to change "cp ~/work/data/input/2K_Highland_18S/* raw_reads" to "cp ~/work/data/input/YOUR_FOLDER_NAME_HERE/* raw_reads"
 
+**Check your file names:** For the most part, when we receive files they are the names you gave your samples plus a string of letters that contain "R1" or "R2" then often end in "fastq.gz". These identifying aspects of the filenames are used in the first line of code under [Remove Primers](https://maine-edna.github.io//Tutorial/#remove-primers), where we create a list of sample names that we then refer to a few times throughout the code. Currently this will identify the substring "R1_" in your file name and truncate it there, as the file name prior to the "R1" tends to be the unique identifier for your samples. If your samples are given to you with a different extension other than "fastq.gz" simply change the first string (*_R1_001.fastq.gz) to match the ending of your file. As long as you do not have "R1_" in your sample names more than once, then this should properly truncate your file names.
+
 **Change your primers:** The tutorial we led used the 18S Comeau primers. However, if you did not use these primers, you will have to change the sequences that are in the primer removal step to match your primers. Description as to what the proper syntax is to do so is in the [Remove Primers](https://maine-edna.github.io//Tutorial/#remove-primers) section of the tutorial.
 
 **Change your database:** Since the tutorial worked on an 18S dataset, the database used to assign taxonomy was an 18S database, PR2. However, this will not be useful if you are not using the 18S gene or if the organisms of interest are not in PR2. Your database should be composed of the taxa of organisms of interest and the proper gene for your analysis. If you are unsure what database to use, reach out to Robin or Rene via email or slack. If you are interested in using a Gulf of Maine MiFish database, reach out to Rene via email or slack.
@@ -174,10 +176,12 @@ Our next step is to remove the primers from our sequences using cutadapt. Cutada
 
 Cutadapt only works on one file at a time. Therefore, when we would like to run this operation on our entire dataset, we wrap it in a loop to do so easily. To do so, we first need to create a file that has all of our base sample names in it:
 
+Note that the below code is updated from when we ran the tutorial. We are now using the function "awk" instead of "cut", as this allows us to identify a few characters in a row and cut the file names according to that substring instead of one character. What this means is that as long as the string "R1_" does not exist anywhere else in your file names, the sample names should be properly truncated. 
+
 ```bash
 cd raw_reads
 
-ls *_R1_001.fastq.gz | cut -f1 -d "R" > samples
+ls *_R1_001.fastq.gz | awk -F "R1_" '{print $1}' > samples
 ```
 
 Now that we have the list of files we will loop through, we can run the following code to run cutadapt on all 46 paired files at once.
